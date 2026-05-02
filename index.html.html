@@ -1,0 +1,2659 @@
+<!DOCTYPE html>
+<html lang="fr" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>INFSPM Biskra — Système de Programmation des Examens</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#06101e;--bg2:#0c1a2e;--bg3:#112240;
+  --gold:#c9993a;--gold2:#e8c06a;--gold3:rgba(201,153,58,0.12);
+  --text:#e8edf5;--text2:#8a9ab5;
+  --green:#27ae60;--red:#e74c3c;--orange:#e67e22;--blue:#2980b9;
+  --border:rgba(201,153,58,0.18);--card:rgba(255,255,255,0.03);--r:14px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+.ar{font-family:'Cairo',sans-serif}
+
+/* ═══ LANDING ═══ */
+#landing{min-height:100vh;display:flex;flex-direction:column;position:relative;overflow:hidden}
+.orb{position:absolute;border-radius:50%;filter:blur(100px);pointer-events:none;z-index:0}
+.orb1{width:800px;height:800px;background:radial-gradient(circle,rgba(30,60,120,0.3) 0%,transparent 70%);top:-300px;right:-200px}
+.orb2{width:600px;height:600px;background:radial-gradient(circle,rgba(201,153,58,0.08) 0%,transparent 70%);bottom:-100px;left:-200px}
+.orb3{width:400px;height:400px;background:radial-gradient(circle,rgba(41,128,185,0.06) 0%,transparent 70%);top:40%;left:30%}
+
+.land-nav{display:flex;align-items:center;justify-content:space-between;padding:18px 52px;border-bottom:1px solid var(--border);background:rgba(6,16,30,0.85);backdrop-filter:blur(16px);position:sticky;top:0;z-index:50}
+.nav-brand{display:flex;align-items:center;gap:16px}
+.nav-logo-box{background:white;border-radius:10px;padding:4px 8px;display:flex;align-items:center}
+.nav-logo-box img{height:38px;object-fit:contain}
+.nav-brand-text{}
+.nav-brand-text h2{font-size:14px;font-weight:700;color:var(--gold2);letter-spacing:.3px}
+.nav-brand-text p{font-size:11px;color:var(--text2);margin-top:2px}
+.btn-enter{background:linear-gradient(135deg,var(--gold),#8a6520);border:none;border-radius:10px;padding:10px 28px;color:#06101e;font-family:'Inter',sans-serif;font-weight:700;font-size:14px;cursor:pointer;transition:all .3s;box-shadow:0 4px 16px rgba(201,153,58,0.25)}
+.btn-enter:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(201,153,58,0.45)}
+
+.hero{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:70px 30px 50px;position:relative;z-index:1}
+.hero-logo-card{background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:20px;padding:20px 36px;display:inline-flex;align-items:center;gap:18px;margin-bottom:32px;backdrop-filter:blur(10px)}
+.hero-logo-card .logo-img{background:white;border-radius:10px;padding:4px 8px}
+.hero-logo-card .logo-img img{height:64px;object-fit:contain}
+.hero-logo-card .logo-info{text-align:left}
+.hero-logo-card .logo-info h2{font-size:22px;font-weight:800;color:var(--gold2);letter-spacing:1px}
+.hero-logo-card .logo-info p{font-size:12px;color:var(--text2);margin-top:3px;max-width:280px;line-height:1.5}
+.hero-logo-card .logo-info small{font-size:11px;color:var(--gold);display:block;margin-top:4px}
+
+.hero-dept{background:var(--gold3);border:1px solid var(--border);border-radius:10px;padding:10px 20px;font-size:12px;color:var(--text2);margin-bottom:28px;max-width:680px;line-height:1.7;text-align:center}
+.hero-dept b{color:var(--gold2)}
+
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(39,174,96,0.1);border:1px solid rgba(39,174,96,0.25);border-radius:30px;padding:6px 18px;font-size:12px;color:#27ae60;margin-bottom:22px;font-weight:600}
+.hero-badge span{width:6px;height:6px;background:#27ae60;border-radius:50%;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(1.5)}}
+
+.hero h1{font-size:clamp(26px,3.5vw,48px);font-weight:800;line-height:1.2;margin-bottom:12px;background:linear-gradient(135deg,#fff 30%,var(--gold2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{font-size:15px;color:var(--text2);max-width:560px;line-height:1.8;margin-bottom:32px}
+
+.cta-group{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;margin-bottom:56px}
+.cta-main{background:linear-gradient(135deg,var(--gold),#8a6520);border:none;border-radius:12px;padding:13px 40px;color:#06101e;font-family:'Inter',sans-serif;font-weight:700;font-size:16px;cursor:pointer;transition:all .3s;box-shadow:0 8px 28px rgba(201,153,58,0.3)}
+.cta-main:hover{transform:translateY(-3px);box-shadow:0 14px 40px rgba(201,153,58,0.5)}
+
+.feats{display:grid;grid-template-columns:repeat(auto-fit,minmax(185px,1fr));gap:14px;max-width:960px;width:100%;padding:0 20px;position:relative;z-index:1}
+.feat{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:20px;transition:all .3s;cursor:default}
+.feat:hover{background:rgba(255,255,255,0.05);border-color:rgba(201,153,58,0.4);transform:translateY(-3px)}
+.feat-icon{font-size:26px;margin-bottom:10px}
+.feat h3{font-size:13px;font-weight:700;margin-bottom:5px}
+.feat p{font-size:12px;color:var(--text2);line-height:1.6}
+
+.land-footer{text-align:center;padding:20px;border-top:1px solid var(--border);font-size:12px;color:var(--text2);margin-top:40px;position:relative;z-index:1}
+
+/* ═══ LOGIN ═══ */
+#loginWrap{position:fixed;inset:0;background:rgba(6,16,30,0.97);backdrop-filter:blur(16px);z-index:300;display:none;align-items:center;justify-content:center}
+.login-card{background:var(--bg3);border:1px solid var(--border);border-radius:20px;padding:40px 36px;width:430px;max-width:95vw;box-shadow:0 40px 80px rgba(0,0,0,0.6);animation:fadeUp .5s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+.lc-logo{text-align:center;margin-bottom:24px}
+.lc-logo .logo-wrap{background:white;border-radius:10px;padding:6px 14px;display:inline-block;margin-bottom:12px}
+.lc-logo img{height:48px;object-fit:contain}
+.lc-logo h2{font-size:18px;font-weight:800}
+.lc-logo p{font-size:12px;color:var(--text2);margin-top:4px}
+.fg{margin-bottom:14px}
+.fg label{display:block;font-size:11px;color:var(--text2);margin-bottom:5px;font-weight:700;text-transform:uppercase;letter-spacing:.5px}
+.fg input,.fg select{width:100%;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:9px;padding:11px 13px;color:var(--text);font-family:'Inter',sans-serif;font-size:14px;transition:all .3s;outline:none}
+.fg input:focus,.fg select:focus{border-color:var(--gold);background:rgba(201,153,58,0.06)}
+.fg select option{background:var(--bg3)}
+.btn-login{width:100%;background:linear-gradient(135deg,var(--gold),#8a6520);border:none;border-radius:10px;padding:13px;color:#06101e;font-family:'Inter',sans-serif;font-size:15px;font-weight:700;cursor:pointer;transition:all .3s;margin-top:4px}
+.btn-login:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(201,153,58,0.4)}
+.l-err{background:rgba(231,76,60,0.12);border:1px solid rgba(231,76,60,0.3);color:#ff6b6b;padding:9px 13px;border-radius:8px;font-size:13px;margin-top:9px;display:none;text-align:center}
+.l-hint{margin-top:12px;padding:11px;background:rgba(255,255,255,0.03);border-radius:8px;font-size:12px;color:var(--text2);line-height:1.7}
+.btn-back{background:transparent;border:none;color:var(--text2);font-size:13px;cursor:pointer;margin-top:12px;text-decoration:underline;display:block;text-align:center}
+
+/* ═══ APP ═══ */
+#appWrap{display:none;min-height:100vh;flex-direction:column}
+.app-hdr{background:var(--bg2);border-bottom:1px solid var(--border);height:60px;display:flex;align-items:center;justify-content:space-between;padding:0 26px;position:sticky;top:0;z-index:100;box-shadow:0 4px 20px rgba(0,0,0,0.4)}
+.ah-left{display:flex;align-items:center;gap:12px}
+.ah-left .logo-box{background:white;border-radius:6px;padding:2px 6px}
+.ah-left .logo-box img{height:30px;object-fit:contain}
+.ah-info h2{font-size:14px;font-weight:700}
+.ah-info span{font-size:11px;color:var(--gold)}
+.ah-right{display:flex;align-items:center;gap:9px}
+.u-badge{background:var(--gold3);border:1px solid var(--border);border-radius:8px;padding:5px 13px;font-size:13px;color:var(--gold2);font-weight:600}
+.btn-out{background:rgba(231,76,60,0.15);border:1px solid rgba(231,76,60,0.3);color:#ff6b6b;padding:5px 13px;border-radius:8px;cursor:pointer;font-size:13px}
+.app-body{flex:1;padding:24px;max-width:1300px;margin:0 auto;width:100%}
+
+/* ═══ TABS ═══ */
+.tabs{display:flex;gap:7px;margin-bottom:20px;flex-wrap:wrap}
+.tab{padding:7px 15px;border-radius:8px;border:1px solid rgba(255,255,255,0.08);background:transparent;color:var(--text2);font-size:13px;font-weight:600;cursor:pointer;transition:all .2s}
+.tab.active,.tab:hover{background:var(--gold3);border-color:var(--gold);color:var(--gold2)}
+.tc{display:none}.tc.active{display:block}
+
+/* ═══ STATS ═══ */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:12px;margin-bottom:20px}
+.sc{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:15px;display:flex;align-items:center;gap:11px}
+.si{width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.sv h3{font-size:22px;font-weight:800}.sv p{font-size:11px;color:var(--text2);margin-top:1px}
+
+/* ═══ PANELS ═══ */
+.panel{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:20px;margin-bottom:16px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:800px){.g2{grid-template-columns:1fr}}
+.sec{font-size:14px;font-weight:700;margin-bottom:13px;display:flex;align-items:center;gap:8px;padding-bottom:11px;border-bottom:1px solid var(--border)}
+
+/* ═══ FIELDS ═══ */
+.field{margin-bottom:12px}
+.field label{display:block;font-size:11px;color:var(--text2);margin-bottom:5px;font-weight:700;text-transform:uppercase;letter-spacing:.5px}
+.field input,.field select{width:100%;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:9px;padding:10px 12px;color:var(--text);font-size:14px;transition:all .3s;outline:none}
+.field input:focus,.field select:focus{border-color:var(--gold);background:rgba(201,153,58,0.05)}
+.field select option{background:var(--bg3)}
+.field input:disabled,.field select:disabled{opacity:.4;cursor:not-allowed}
+
+/* ═══ BUTTONS ═══ */
+.btn{padding:9px 16px;border-radius:9px;border:none;font-size:14px;font-weight:700;cursor:pointer;transition:all .25s}
+.btn-p{background:linear-gradient(135deg,var(--gold),#8a6520);color:#06101e;width:100%;padding:12px;font-size:15px}
+.btn-p:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(201,153,58,0.3)}
+.btn-sm{padding:4px 10px;font-size:12px}
+.btn-d{background:rgba(231,76,60,0.15);color:#ff6b6b;border:1px solid rgba(231,76,60,0.3)}
+.btn-s{background:rgba(39,174,96,0.15);color:#27ae60;border:1px solid rgba(39,174,96,0.3)}
+.btn-e{background:var(--gold3);color:var(--gold2);border:1px solid var(--border)}
+.btn-b{background:rgba(41,128,185,0.15);color:#5dade2;border:1px solid rgba(41,128,185,0.3)}
+
+/* ═══ TABLE ═══ */
+.tw{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{padding:9px 11px;background:rgba(201,153,58,0.07);color:var(--gold2);font-weight:700;text-align:left;border-bottom:1px solid var(--border);white-space:nowrap}
+td{padding:10px 11px;border-bottom:1px solid rgba(255,255,255,0.04);vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:rgba(255,255,255,0.02)}
+
+/* ═══ BADGE ═══ */
+.badge{display:inline-block;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:700}
+.bg{background:rgba(39,174,96,0.15);color:#27ae60;border:1px solid rgba(39,174,96,0.3)}
+.br{background:rgba(231,76,60,0.15);color:#ff6b6b;border:1px solid rgba(231,76,60,0.3)}
+.bo{background:rgba(230,126,34,0.15);color:#e67e22;border:1px solid rgba(230,126,34,0.3)}
+.bb{background:rgba(41,128,185,0.15);color:#5dade2;border:1px solid rgba(41,128,185,0.3)}
+
+/* ═══ TOAST ═══ */
+.toast{position:fixed;top:70px;left:50%;transform:translateX(-50%) translateY(-20px);background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:11px 22px;font-size:14px;font-weight:600;box-shadow:0 15px 40px rgba(0,0,0,0.5);z-index:9999;opacity:0;transition:all .4s;pointer-events:none;white-space:nowrap;max-width:90vw}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.toast.success{border-color:rgba(39,174,96,0.4);color:#27ae60}
+.toast.error{border-color:rgba(231,76,60,0.4);color:#ff6b6b}
+.toast.warn{border-color:rgba(230,126,34,0.4);color:#e67e22}
+
+.cbar{background:rgba(255,255,255,0.07);border-radius:10px;height:5px;margin-top:4px;overflow:hidden}
+.cfill{height:100%;border-radius:10px;transition:width .5s}
+.abox{border-radius:10px;padding:10px 14px;font-size:13px;margin-bottom:13px;display:flex;align-items:flex-start;gap:8px}
+.aw{background:rgba(230,126,34,0.1);border:1px solid rgba(230,126,34,0.3);color:#e67e22}
+.ai{background:rgba(41,128,185,0.1);border:1px solid rgba(41,128,185,0.25);color:#5dade2}
+.as{background:rgba(39,174,96,0.1);border:1px solid rgba(39,174,96,0.3);color:#27ae60}
+
+/* ═══ MODAL ═══ */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:400;display:none;align-items:center;justify-content:center}
+.modal-bg.open{display:flex}
+.modal{background:var(--bg3);border:1px solid var(--border);border-radius:18px;padding:28px;width:460px;max-width:95vw;animation:fadeUp .3s ease;max-height:90vh;overflow-y:auto}
+.modal h3{font-size:17px;font-weight:700;margin-bottom:16px}
+.modal-btns{display:flex;gap:9px;margin-top:14px}
+
+/* ═══ WEEKLY PROGRAM ═══ */
+.week-scroll{overflow-x:auto;margin-top:8px}
+.week-tbl{border-collapse:collapse;font-size:12px;min-width:900px;width:100%}
+.week-tbl th{padding:10px 8px;background:linear-gradient(135deg,var(--gold3),rgba(201,153,58,0.05));color:var(--gold2);font-weight:700;border:1px solid var(--border);text-align:center;font-size:12px}
+.week-tbl td{border:1px solid var(--border);vertical-align:top;padding:6px;min-width:130px}
+.exam-block{background:rgba(41,128,185,0.1);border:1px solid rgba(41,128,185,0.2);border-radius:7px;padding:7px;margin-bottom:5px}
+.exam-block .eb-module{font-size:11px;font-weight:700;color:var(--gold2);margin-bottom:2px;line-height:1.3}
+.exam-block .eb-spec{font-size:10px;color:var(--text2)}
+.exam-block .eb-room{font-size:10px;color:#5dade2;margin-top:3px}
+.exam-block .eb-guards{margin-top:4px;display:flex;flex-wrap:wrap;gap:3px}
+.guard-chip{background:rgba(39,174,96,0.15);color:#27ae60;border-radius:4px;padding:2px 5px;font-size:10px;font-weight:600}
+.empty-cell{text-align:center;color:var(--text2);font-size:11px;padding:12px 0;opacity:.4}
+.time-hdr{background:var(--bg3)!important;color:var(--gold)!important;font-weight:700;text-align:center;width:80px}
+
+/* ═══ GUARD CARD ═══ */
+.gcard{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border:1px solid var(--border);border-radius:11px;margin-bottom:8px;background:rgba(255,255,255,0.02)}
+.gcard-l{display:flex;align-items:center;gap:10px}
+.gavatar{width:36px;height:36px;border-radius:9px;background:linear-gradient(135deg,var(--blue),var(--gold));display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:white;flex-shrink:0}
+.gcard-info strong{font-size:14px}
+.gcard-info small{font-size:11px;color:var(--text2);display:block}
+.gcard-r{display:flex;align-items:center;gap:8px}
+.guard-count{font-size:12px;color:var(--gold2);font-weight:700}
+
+/* ═══ USER CARD ═══ */
+.ucard{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border:1px solid var(--border);border-radius:11px;margin-bottom:8px;background:rgba(255,255,255,0.02)}
+.ucard-l{display:flex;align-items:center;gap:10px}
+.uavatar{width:36px;height:36px;border-radius:9px;background:linear-gradient(135deg,var(--bg3),var(--gold));display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;color:var(--gold2);flex-shrink:0}
+.ucard-r{display:flex;gap:7px}
+
+.empty{text-align:center;padding:32px;color:var(--text2)}
+.empty .ei{font-size:40px;margin-bottom:10px;opacity:.4}
+.empty p{font-size:13px}
+
+/* ═══ SLOT CARD ═══ */
+.slot-card{padding:13px;border:1px solid var(--border);border-radius:11px;margin-bottom:9px;background:rgba(255,255,255,0.02)}
+.slot-card.full{border-color:rgba(231,76,60,0.3)}
+
+/* ═══ PRINT ═══ */
+@media print{
+  #landing,#loginWrap,.app-hdr,.tabs,button,.btn,.toast{display:none!important}
+  body,#appWrap{background:white!important;color:#000!important}
+  .panel,.sc,.week-tbl td,.week-tbl th{border-color:#ccc!important;background:white!important;color:#000!important}
+  .exam-block{border:1px solid #999!important;background:#f5f5f5!important;color:#000!important}
+  .print-show{display:block!important}
+}
+.print-show{display:none}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════ LANDING ═══════════════ -->
+<div id="landing">
+  <div class="orb orb1"></div><div class="orb orb2"></div><div class="orb orb3"></div>
+
+  <nav class="land-nav">
+    <div class="nav-brand">
+      <div class="nav-logo-box"><img id="navLogo" src="" alt="INFSPM"></div>
+      <div class="nav-brand-text">
+        <h2>INFSPM — BISKRA</h2>
+        <p>Institut National de Formation Supérieure Paramédicale</p>
+      </div>
+    </div>
+    <button class="btn-enter" onclick="openLogin()">🔐 Connexion</button>
+  </nav>
+
+  <div class="hero">
+    <div class="hero-logo-card">
+      <div class="logo-img"><img id="heroLogo" src="" alt="INFSPM"></div>
+      <div class="logo-info">
+        <h2>INFSPM BISKRA</h2>
+        <p>Institut National de Formation Supérieure Paramédicale de Biskra</p>
+        <small>✉️ infspmbiskra@inpfp.dz</small>
+      </div>
+    </div>
+
+    <div class="hero-dept">
+      <b>Département de l'enseignement, des stages, de la formation continue et des diplômes</b><br>
+      Service du suivi, de l'évaluation, des examens et des concours<br>
+      <span style="color:var(--gold2);font-weight:700;font-size:13px;margin-top:4px;display:inline-block">👤 M. ZEKRI Ammar</span>
+    </div>
+
+    <div class="hero-badge"><span></span>Système numérique de gestion des examens</div>
+    <h1>Système de Programmation<br>des Examens</h1>
+    <p class="hero-sub">Plateforme intelligente pour la gestion des calendriers d'examens, la répartition des salles et l'organisation de la surveillance — pour toutes les spécialités de l'institut</p>
+
+    <div class="cta-group">
+      <button class="cta-main" onclick="openLogin()">🎓 Accéder au Système</button>
+    </div>
+
+    <div class="feats">
+      <div class="feat"><div class="feat-icon">📝</div><h3>Programmation des examens</h3><p>Chaque responsable soumet ses demandes par spécialité, semestre et module</p></div>
+      <div class="feat"><div class="feat-icon">🏛️</div><h3>Gestion des salles</h3><p>Capacités d'accueil avec fermeture automatique en cas de saturation</p></div>
+      <div class="feat"><div class="feat-icon">👨‍🏫</div><h3>Rotation des surveillants</h3><p>Système équitable garantissant une distribution égale de la surveillance</p></div>
+      <div class="feat"><div class="feat-icon">📅</div><h3>Programme hebdomadaire</h3><p>Génération automatique du calendrier avec impression et export</p></div>
+      <div class="feat"><div class="feat-icon">👥</div><h3>Tafwij automatique</h3><p>Répartition des étudiants dans plusieurs salles si effectif important</p></div>
+      <div class="feat"><div class="feat-icon">🔐</div><h3>Accès sécurisé</h3><p>Mot de passe individuel pour chaque responsable de spécialité</p></div>
+    </div>
+  </div>
+  <div class="land-footer">© 2026 INFSPM Biskra — Tous droits réservés &nbsp;|&nbsp; infspmbiskra@inpfp.dz</div>
+</div>
+
+<!-- ═══════════════ LOGIN ═══════════════ -->
+<div id="loginWrap" style="display:none;align-items:center;justify-content:center">
+  <div class="login-card">
+    <div class="lc-logo">
+      <div class="logo-wrap"><img id="loginLogo" src="" alt="INFSPM" style="height:44px"></div>
+      <h2>Connexion</h2>
+      <p>Système de Programmation des Examens</p>
+    </div>
+    <div class="fg">
+      <label>Sélectionnez votre compte</label>
+      <select id="loginUser"><option value="">— Choisir —</option></select>
+    </div>
+    <div class="fg">
+      <label>Mot de passe</label>
+      <input type="password" id="loginPass" placeholder="Entrez votre mot de passe" />
+    </div>
+    <button class="btn-login" onclick="doLogin()">🔐 Se connecter</button>
+    <div class="l-err" id="loginErr">Mot de passe incorrect</div>
+    <div class="l-hint">
+      <b style="color:var(--gold2)">🔑 Contactez M. ZEKRI Ammar pour obtenir vos identifiants de connexion.</b>
+    </div>
+    <button class="btn-back" onclick="closeLogin()">← Retour à l'accueil</button>
+  </div>
+</div>
+
+<!-- ═══════════════ APP ═══════════════ -->
+<div id="appWrap" style="display:none;flex-direction:column">
+  <header class="app-hdr">
+    <div class="ah-left">
+      <div class="logo-box"><img id="appLogo" src="" alt="INFSPM"></div>
+      <div class="ah-info"><h2>INFSPM Biskra</h2><span id="hRole">—</span></div>
+    </div>
+    <div class="ah-right">
+      <div class="u-badge" id="hUser">—</div>
+      <button class="btn-out" onclick="logout()">🚪 Déconnexion</button>
+    </div>
+  </header>
+
+  <div class="app-body">
+
+    <!-- ──── ADMIN VIEW ──── -->
+    <div id="adminView" style="display:none">
+      <div class="tabs">
+        <button class="tab active" onclick="swTab('tDash',this)">📊 Tableau de bord</button>
+        <button class="tab" onclick="swTab('tSlots',this)">🏛️ Salles & Créneaux</button>
+        <button class="tab" onclick="swTab('tReqs',this)">📋 Demandes</button>
+        <button class="tab" onclick="swTab('tWeek',this)">📅 Programme hebdo</button>
+        <button class="tab" onclick="swTab('tGuards',this)">👨‍🏫 Surveillants</button>
+        <button class="tab" onclick="swTab('tSwaps',this)">🔄 Échanges de surveillance</button>
+        <button class="tab" onclick="swTab('tPasswords',this)">🔑 Mots de passe & Envoi</button>
+        <button class="tab" onclick="swTab('tUsers',this)">👥 Spécialités</button>
+      </div>
+
+      <!-- Dashboard -->
+      <div id="tDash" class="tc active">
+        <div class="stats" id="adminStats"></div>
+        <div class="panel">
+          <div class="sec">📋 Dernières demandes</div>
+          <div class="tw"><table><thead><tr><th>Spécialité</th><th>Module</th><th>Semestre</th><th>Date</th><th>Heure</th><th>Étudiants</th><th>Salle(s)</th><th>Statut</th><th>Action</th></tr></thead><tbody id="dashBody"></tbody></table></div>
+        </div>
+      </div>
+
+      <!-- Slots -->
+      <div id="tSlots" class="tc">
+        <div class="g2">
+          <div class="panel">
+            <div class="sec">➕ Programmer un créneau d'examen</div>
+            <div class="field"><label>Salle</label>
+              <select id="rName">
+                <option value="">— Choisir la salle —</option>
+                <option value="Salle 01">Salle 01 — 50 places</option>
+                <option value="Salle 02">Salle 02 — 50 places</option>
+                <option value="Salle 03">Salle 03 — 100 places</option>
+                <option value="Salle 04">Salle 04 — 50 places</option>
+                <option value="Salle 05">Salle 05 — 50 places</option>
+                <option value="Salle 06">Salle 06 — 50 places</option>
+                <option value="Salle 07">Salle 07 — 50 places</option>
+                <option value="Salle 08">Salle 08 — 50 places</option>
+                <option value="Salle 09">Salle 09 — 50 places</option>
+                <option value="Salle 10">Salle 10 — 50 places</option>
+                <option value="Salle 11">Salle 11 — 50 places</option>
+                <option value="Salle 12">Salle 12 — 50 places</option>
+                <option value="Salle 13 (CDR)">Salle 13 (CDR) — 100 places</option>
+                <option value="Salle 14">Salle 14 — 30 places</option>
+                <option value="Salle 15">Salle 15 — 30 places</option>
+                <option value="Amphithéâtre">Amphithéâtre — 50 places</option>
+                <option value="Grande Salle">Grande Salle — 120 places</option>
+                <option value="Salle Polyvalente">Salle Polyvalente — 50 places</option>
+                <option value="__autre__">Autre (saisie manuelle)</option>
+              </select>
+            </div>
+            <div class="field" id="rNameManualWrap" style="display:none"><label>Nom de la salle (manuel)</label><input id="rNameManual" placeholder="Entrez le nom" /></div>
+            <div class="field"><label>Date</label><input type="date" id="rDate" /></div>
+            <div class="field"><label>Heure</label>
+              <select id="rTime">
+                <option value="08:00">08h00</option><option value="09:00">09h00</option>
+                <option value="10:00">10h00</option><option value="11:00">11h00</option>
+                <option value="13:00">13h00</option><option value="14:00">14h00</option>
+                <option value="15:00">15h00</option><option value="16:00">16h00</option>
+              </select>
+            </div>
+            <div class="field"><label>Durée</label>
+              <select id="rDur">
+                <option value="1h30">1h30</option><option value="2h00">2h00</option>
+                <option value="2h30">2h30</option><option value="3h00">3h00</option>
+              </select>
+            </div>
+            <button class="btn btn-p" onclick="addSlot()">➕ Ajouter le créneau</button>
+          </div>
+          <div class="panel">
+            <div class="sec">📅 Créneaux programmés (<span id="slotCnt">0</span>)</div>
+            <div id="slotsList"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Requests -->
+      <div id="tReqs" class="tc">
+        <div class="panel">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:8px">
+            <div class="sec" style="margin:0;border:none;padding:0">📋 Toutes les demandes de programmation</div>
+            <button class="btn btn-d btn-sm" onclick="clearAllRequests()" style="padding:7px 14px">🗑️ Vider toutes les demandes</button>
+          </div>
+          <div class="tw"><table><thead><tr><th>Spécialité</th><th>Module</th><th>Semestre</th><th>Date</th><th>Heure</th><th>Étudiants</th><th>Salle(s)</th><th>Statut</th><th>Action</th></tr></thead><tbody id="allReqBody"></tbody></table></div>
+        </div>
+      </div>
+
+      <!-- Weekly Program -->
+      <div id="tWeek" class="tc">
+        <div class="panel">
+          <div class="print-show" style="text-align:center;padding:16px 0 8px;border-bottom:2px solid #ccc;margin-bottom:16px">
+            <h2 style="color:#000">INFSPM Biskra — Programme Hebdomadaire des Examens</h2>
+            <p style="color:#555;font-size:13px">Département de l'enseignement — Service des examens et concours &nbsp;|&nbsp; M. ZEKRI Ammar</p>
+            <p id="printSessionInfo" style="color:#333;font-size:13px;margin-top:4px"></p>
+          </div>
+
+          <!-- Session info bar -->
+          <div id="sessionBar" style="background:var(--gold3);border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
+            <div>
+              <b style="color:var(--gold2)">📅 Session actuelle :</b>
+              <span id="sessionLabel" style="color:var(--text);margin-right:8px">Aucune session ouverte</span>
+              <span id="sessionStatus" class="badge bo">En collecte</span>
+            </div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap">
+              <button class="btn btn-b" onclick="openNewSession()" id="btnOpenSession">➕ Ouvrir session</button>
+              <button class="btn btn-p" style="width:auto;padding:9px 16px" onclick="generateWeekly()" id="btnGenerate">🔄 Générer programme</button>
+              <button class="btn btn-e" onclick="printAndClose()" id="btnPrint" style="display:none">🖨️ Imprimer & Clôturer</button>
+            </div>
+          </div>
+
+          <div id="weeklyProg"><div class="empty"><div class="ei">📅</div><p>Ouvrez une session puis cliquez sur "Générer programme"</p></div></div>
+
+          <!-- Archive sessions -->
+          <div id="archivePanel" style="margin-top:20px;display:none">
+            <div class="sec">📁 Sessions archivées</div>
+            <div id="archiveList"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Guards -->
+      <div id="tGuards" class="tc">
+        <div class="g2">
+          <div class="panel">
+            <div class="sec">➕ Ajouter un surveillant</div>
+            <div class="field"><label>Nom complet</label><input id="gName" placeholder="Nom et prénom" /></div>
+            <div class="field"><label>Grade / Fonction</label><input id="gRank" placeholder="ex: Maître de conférences" /></div>
+            <button class="btn btn-p" onclick="addGuard()">➕ Ajouter</button>
+          </div>
+          <div class="panel">
+            <div class="sec">👨‍🏫 Liste des surveillants (<span id="guardCnt">0</span>)</div>
+            <div id="guardsList"></div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="sec">📊 Statistiques de rotation</div>
+          <div id="guardStats"><div class="empty"><div class="ei">📊</div><p>Aucune statistique disponible</p></div></div>
+        </div>
+      </div>
+
+      <!-- Swaps Admin -->
+      <div id="tSwaps" class="tc">
+        <div class="panel">
+          <div class="sec">🔄 Demandes d'échange de surveillance</div>
+          <div id="adminSwapsList"><div class="empty"><div class="ei">🔄</div><p>Aucune demande d'échange</p></div></div>
+        </div>
+      </div>
+
+      <!-- Passwords Management -->
+      <div id="tPasswords" class="tc">
+        <div class="abox ai">🔑 Définissez ici les mots de passe de chaque responsable et surveillante, puis envoyez-les directement via WhatsApp. Les mots de passe ne sont jamais visibles par les utilisateurs.</div>
+
+        <div class="panel">
+          <div class="sec">👥 Mots de passe — Responsables de Spécialités</div>
+          <div class="tw">
+            <table id="specPassTable">
+              <thead><tr><th>Nom</th><th>Spécialité</th><th>Mot de passe</th><th>Statut</th><th>Envoyer</th></tr></thead>
+              <tbody id="specPassBody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="sec">👩‍🏫 Mots de passe — Surveillantes</div>
+          <div class="tw">
+            <table id="guardPassTable">
+              <thead><tr><th>Nom</th><th>N° Tél WhatsApp</th><th>Mot de passe</th><th>Statut</th><th>Envoyer</th></tr></thead>
+              <tbody id="guardPassBody"></tbody>
+            </table>
+          </div>
+          <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap">
+            <button class="btn btn-p" style="width:auto;padding:10px 20px" onclick="sendAllPasswords()">📤 Envoyer tous les mots de passe (WhatsApp)</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Specialties -->
+      <div id="tUsers" class="tc">
+        <div class="g2">
+          <div class="panel">
+            <div class="sec">➕ Ajouter une spécialité</div>
+            <div class="field"><label>Code (anglais, sans espaces)</label><input id="newUid" placeholder="ex: kine" /></div>
+            <div class="field"><label>Nom de la spécialité</label><input id="newUname" placeholder="ex: Kinésithérapeute" /></div>
+            <div class="field"><label>Mot de passe</label><input type="password" id="newUpass" placeholder="Mot de passe du responsable" /></div>
+            <button class="btn btn-p" onclick="addUser()">➕ Ajouter</button>
+          </div>
+          <div class="panel">
+            <div class="sec">👥 Spécialités actuelles</div>
+            <div id="usersList"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ──── SPECIALIST VIEW ──── -->
+    <div id="specView" style="display:none">
+      <div id="notifBanner" class="abox aw" style="display:none"></div>
+      <div class="stats" id="specStats"></div>
+      <div class="g2">
+        <div class="panel">
+          <div class="sec">📝 Demander une programmation d'examen</div>
+          <div class="abox ai">ℹ️ Les examens se déroulent de <b>11h30 à 13h00</b>. Les salles sont attribuées automatiquement selon l'effectif.</div>
+          <div class="field"><label>Semestre</label>
+            <select id="semSel" onchange="loadModules()">
+              <option value="">— Choisir le semestre —</option>
+              <option value="1">Semestre 1</option><option value="2">Semestre 2</option>
+              <option value="3">Semestre 3</option><option value="4">Semestre 4</option>
+              <option value="5">Semestre 5</option><option value="6">Semestre 6</option>
+            </select>
+          </div>
+          <div class="field"><label>Module</label>
+            <select id="modSel" disabled><option value="">— Choisir le semestre d'abord —</option></select>
+          </div>
+          <div class="field"><label>Jour(s) souhaité(s) pour l'examen</label>
+            <div id="dayCheckboxes" style="display:flex;flex-wrap:wrap;gap:10px;padding:10px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:9px">
+              <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:13px"><input type="checkbox" value="Samedi" style="width:16px;height:16px;accent-color:var(--gold)"> Samedi</label>
+              <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:13px"><input type="checkbox" value="Dimanche" style="width:16px;height:16px;accent-color:var(--gold)"> Dimanche</label>
+              <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:13px"><input type="checkbox" value="Lundi" style="width:16px;height:16px;accent-color:var(--gold)"> Lundi</label>
+              <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:13px"><input type="checkbox" value="Mardi" style="width:16px;height:16px;accent-color:var(--gold)"> Mardi</label>
+              <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:13px"><input type="checkbox" value="Mercredi" style="width:16px;height:16px;accent-color:var(--gold)"> Mercredi</label>
+              <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:13px"><input type="checkbox" value="Jeudi" style="width:16px;height:16px;accent-color:var(--gold)"> Jeudi</label>
+            </div>
+            <div style="font-size:11px;color:var(--text2);margin-top:5px">Cochez un ou plusieurs jours préférés (le chef de service fera le choix final)</div>
+          </div>
+          <div class="field"><label>Nombre d'étudiants</label>
+            <input type="number" id="stuCount" placeholder="Entrez le nombre" min="1" />
+          </div>
+          <div id="capWarn" class="abox aw" style="display:none">⚠️ Capacité insuffisante — contactez M. ZEKRI Ammar.</div>
+          <div id="multiInfo" class="abox ai" style="display:none"></div>
+          <button class="btn btn-p" onclick="submitReq()">📤 Soumettre la demande</button>
+        </div>
+        <div class="panel">
+          <div class="sec">📋 Mes demandes</div>
+          <div id="myReqs"><div class="empty"><div class="ei">📭</div><p>Aucune demande pour l'instant</p></div></div>
+        </div>
+      </div>
+      <div class="panel" style="margin-top:16px">
+        <div class="sec">📅 Créneaux disponibles</div>
+        <div id="availSlots"></div>
+      </div>
+    </div>
+
+    <!-- ──── GUARD VIEW ──── -->
+    <div id="guardView" style="display:none">
+      <div class="stats" id="guardStats2"></div>
+      <div class="g2">
+        <div class="panel">
+          <div class="sec">📋 Mes séances de surveillance</div>
+          <div id="myGuardSessions"><div class="empty"><div class="ei">📋</div><p>Aucune séance assignée pour l'instant</p></div></div>
+        </div>
+        <div class="panel">
+          <div class="sec">🔄 Demander un échange de séance</div>
+          <div class="field"><label>Ma séance à échanger</label>
+            <select id="mySessionSel"><option value="">— Choisir ma séance —</option></select>
+          </div>
+          <div class="field"><label>Avec quelle collègue ?</label>
+            <select id="swapWithSel"><option value="">— Choisir la collègue —</option></select>
+          </div>
+          <div class="field"><label>Sa séance souhaitée</label>
+            <select id="herSessionSel" disabled><option value="">— Choisir la collègue d'abord —</option></select>
+          </div>
+          <div class="field"><label>Motif (facultatif)</label>
+            <input id="swapReason" placeholder="ex: Raison personnelle..." />
+          </div>
+          <button class="btn btn-p" onclick="submitSwap()">📤 Envoyer la demande d'échange</button>
+        </div>
+      </div>
+      <div class="panel" style="margin-top:16px">
+        <div class="sec">📬 Demandes reçues de collègues</div>
+        <div id="incomingSwaps"><div class="empty"><div class="ei">📬</div><p>Aucune demande reçue</p></div></div>
+      </div>
+      <div class="panel" style="margin-top:16px">
+        <div class="sec">📤 Mes demandes envoyées</div>
+        <div id="sentSwaps"><div class="empty"><div class="ei">📤</div><p>Aucune demande envoyée</p></div></div>
+      </div>
+    </div>
+
+    <!-- ──── VIEWER VIEW ──── -->
+    <div id="viewerView" style="display:none">
+      <div class="abox ai" style="margin-bottom:20px">👁️ Accès en lecture seule — Vous pouvez consulter toutes les données sans possibilité de modification.</div>
+      <div class="stats" id="viewerStats"></div>
+
+      <!-- Tabs for viewer -->
+      <div class="tabs" id="viewerTabs">
+        <button class="tab active" onclick="swViewerTab('vDemandes',this)">📋 Demandes</button>
+        <button class="tab" onclick="swViewerTab('vSpecialites',this)">🎓 Spécialités & Modules</button>
+        <button class="tab" onclick="swViewerTab('vCreneaux',this)">🏛️ Créneaux</button>
+        <button class="tab" onclick="swViewerTab('vSurveillantes',this)">👩‍🏫 Surveillantes</button>
+      </div>
+
+      <!-- Demandes -->
+      <div id="vDemandes" class="tc active">
+        <div class="panel">
+          <div class="sec">📋 Toutes les demandes de programmation</div>
+          <div class="tw"><table><thead><tr><th>Spécialité</th><th>Module</th><th>Semestre</th><th>Date</th><th>Heure</th><th>Étudiants</th><th>Salle(s)</th><th>Statut</th></tr></thead><tbody id="viewerReqBody"></tbody></table></div>
+        </div>
+      </div>
+
+      <!-- Spécialités & Modules -->
+      <div id="vSpecialites" class="tc">
+        <div class="panel">
+          <div class="sec">🎓 Toutes les spécialités et leurs modules</div>
+          <div id="viewerModules"></div>
+        </div>
+      </div>
+
+      <!-- Créneaux -->
+      <div id="vCreneaux" class="tc">
+        <div class="panel">
+          <div class="sec">🏛️ Créneaux programmés</div>
+          <div id="viewerSlots"></div>
+        </div>
+      </div>
+
+      <!-- Surveillantes -->
+      <div id="vSurveillantes" class="tc">
+        <div class="panel">
+          <div class="sec">👩‍🏫 Surveillantes</div>
+          <div id="viewerGuards"></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- MODAL edit user -->
+<div class="modal-bg" id="editModal">
+  <div class="modal">
+    <h3>✏️ Modifier la spécialité</h3>
+    <input type="hidden" id="editUid" />
+    <div class="field"><label>Nom de la spécialité</label><input id="editUname" /></div>
+    <div class="field"><label>Nouveau mot de passe (laisser vide pour conserver)</label><input type="password" id="editUpass" placeholder="Optionnel" /></div>
+    <div class="modal-btns">
+      <button class="btn btn-p" style="flex:1" onclick="saveEditUser()">💾 Enregistrer</button>
+      <button class="btn btn-d" onclick="closeModal('editModal')">Annuler</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ══════════════════════════════════════════════════════
+//  SUPABASE CONFIG
+// ══════════════════════════════════════════════════════
+const SUPABASE_URL = 'https://cigqzxjpthdtvtpahohp.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNpZ3F6eGpwdGhkdHZ0cGFob2hwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY4OTQ5NTMsImV4cCI6MjA5MjQ3MDk1M30.ryKOVuAnikFV36-M5NxehMbyPRJLVhAFx6wxdCHUXTw';
+
+// Load Supabase JS SDK dynamically
+let _supabase = null;
+async function getSupabase() {
+  if (_supabase) return _supabase;
+  await new Promise((resolve, reject) => {
+    const s = document.createElement('script');
+    s.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';
+    s.onload = resolve; s.onerror = reject;
+    document.head.appendChild(s);
+  });
+  _supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+  return _supabase;
+}
+
+// Supabase helpers using official SDK
+async function sbSelect(table, filter='') {
+  const db = await getSupabase();
+  let q = db.from(table).select('*');
+  // parse simple filters like &id=eq.5
+  if (filter) {
+    const parts = filter.replace(/^&/,'').split('&');
+    parts.forEach(p => {
+      const m = p.match(/^(\w+)=eq\.(.+)$/);
+      if (m) q = q.eq(m[1], m[2]);
+      if (p === 'order=id.asc') q = q.order('id', {ascending:true});
+    });
+  }
+  const { data, error } = await q;
+  if (error) { console.error('sbSelect error:', error); return null; }
+  return data;
+}
+
+async function sbInsert(table, data) {
+  const db = await getSupabase();
+  const rows = Array.isArray(data) ? data : [data];
+  const { data: res, error } = await db.from(table).insert(rows).select();
+  if (error) { console.error('sbInsert error:', error); return null; }
+  return res;
+}
+
+async function sbUpdate(table, filter, data) {
+  const db = await getSupabase();
+  let q = db.from(table).update(data);
+  if (filter) {
+    const parts = filter.replace(/^&/,'').split('&');
+    parts.forEach(p => {
+      const m = p.match(/^(\w+)=eq\.(.+)$/);
+      if (m) q = q.eq(m[1], m[2]);
+    });
+  }
+  const { error } = await q.select();
+  if (error) console.error('sbUpdate error:', error);
+}
+
+async function sbDelete(table, filter) {
+  const db = await getSupabase();
+  let q = db.from(table).delete();
+  if (filter) {
+    const parts = filter.replace(/^&/,'').split('&');
+    parts.forEach(p => {
+      const m = p.match(/^(\w+)=eq\.(.+)$/);
+      if (m) q = q.eq(m[1], m[2]);
+    });
+  }
+  const { error } = await q;
+  if (error) console.error('sbDelete error:', error);
+}
+
+// ── LOCAL STORAGE HELPERS ──
+function lsSave(key, val) { try { localStorage.setItem('infspm_'+key, JSON.stringify(val)); } catch(e){} }
+function lsLoad(key, def) { try { const v=localStorage.getItem('infspm_'+key); return v?JSON.parse(v):def; } catch(e){ return def; } }
+
+// ── DB INIT ──
+async function initDB() {
+  showLoader('⏳ Chargement des données...');
+  try {
+    // 1. Load passwords from localStorage immediately (for login)
+    loadPasswordsFromLS();
+    buildLoginDropdown();
+    // 2. Load all data from Supabase (primary source)
+    await loadFromSupabase();
+    showLoader('');
+    showToast('✅ Données chargées', 'success');
+  } catch(e) {
+    console.error('initDB error:', e);
+    // Fallback to localStorage
+    loadFromLocalStorage();
+    showLoader('');
+    showToast('⚠️ Connexion lente — données locales utilisées temporairement','warn');
+  }
+}
+
+function loadPasswordsFromLS() {
+  // Load passwords from localStorage immediately so login works
+  const savedUserPass = lsLoad('userPass', {});
+  Object.entries(savedUserPass).forEach(([uid, pass]) => { if(users[uid]) users[uid].pass = pass; });
+  const savedGuardPass = lsLoad('guardPass', {});
+  Object.entries(savedGuardPass).forEach(([uid, pass]) => { if(users[uid]) users[uid].pass = pass; });
+}
+
+async function loadFromSupabase() {
+  const db = await getSupabase();
+
+  // Load slots (only dated ones = scheduled)
+  const { data: dbSlots, error: e1 } = await db.from('exam_slots').select('*').neq('date','').not('date','is',null).order('id',{ascending:true});
+  if (!e1 && dbSlots && dbSlots.length > 0) {
+    slots = dbSlots.map(s=>({id:s.id,room:s.room,capacity:parseInt(s.capacity)||50,date:s.date||'',time:s.time||'08:00',dur:s.dur||'2h00',booked:parseInt(s.booked)||0}));
+    slotIdCtr = Math.max(...slots.map(s=>s.id), 100) + 1;
+    lsSave('slots', slots);
+  } else {
+    // Use localStorage fallback
+    const ls = lsLoad('slots', []);
+    if (ls.length > 0) slots = ls;
+  }
+
+  // Load requests
+  const { data: dbReqs, error: e2 } = await db.from('exam_requests').select('*').order('id',{ascending:true});
+  if (!e2 && dbReqs && dbReqs.length > 0) {
+    requests = dbReqs.map(r=>({
+      id:r.id, userId:r.user_id, module:r.module, semestre:r.semestre,
+      date:r.date, time:r.time, students:r.students,
+      room:r.room, rooms:r.rooms?tryParse(r.rooms,[]):[], slotIds:r.slot_ids?tryParse(r.slot_ids,[]):[],
+      assignedGuards:r.assigned_guards?tryParse(r.assigned_guards,null):null,
+      status:r.status, _saved:true
+    }));
+    reqIdCtr = Math.max(...requests.map(r=>r.id), 0) + 1;
+    lsSave('requests', requests);
+  } else {
+    const ls = lsLoad('requests', []);
+    if (ls.length > 0) requests = ls;
+  }
+
+  // Load user passwords from DB (overrides localStorage)
+  const { data: dbUsers, error: e3 } = await db.from('exam_users').select('*');
+  if (!e3 && dbUsers && dbUsers.length > 0) {
+    const passMap = {}, guardPassMap = {};
+    dbUsers.forEach(u=>{
+      if(users[u.id]) {
+        if(u.pass) users[u.id].pass = u.pass;
+        if(u.phone) users[u.id].phone = u.phone;
+        if(u.pass) passMap[u.id] = u.pass;
+      }
+    });
+    lsSave('userPass', passMap);
+    buildLoginDropdown();
+  }
+
+  // Load guards data
+  const { data: dbGuards, error: e4 } = await db.from('exam_guards').select('*').order('id',{ascending:true});
+  if (!e4 && dbGuards && dbGuards.length > 0) {
+    const countMap = {}, phoneMap = {};
+    dbGuards.forEach(g=>{
+      const guard = guards.find(x=>x.id===g.id);
+      if(guard){ guard.count=g.count||0; guard.phone=g.phone||''; }
+      countMap[g.id]=g.count||0; phoneMap[g.id]=g.phone||'';
+    });
+    lsSave('guardCounts', countMap);
+    lsSave('guardPhones', phoneMap);
+  }
+
+  // Load swaps
+  const { data: dbSwaps, error: e5 } = await db.from('exam_swaps').select('*').order('id',{ascending:true});
+  if (!e5 && dbSwaps && dbSwaps.length > 0) {
+    swapRequests = dbSwaps.map(s=>({
+      id:s.id, fromGuardId:s.from_guard_id, fromGuardName:s.from_guard_name,
+      toGuardId:s.to_guard_id, toGuardName:s.to_guard_name,
+      mySessionId:s.my_session_id, mySession:s.my_session, module1:s.module1,
+      herSessionId:s.her_session_id, herSession:s.her_session, module2:s.module2,
+      reason:s.reason||'', status:s.status, _saved:true,
+      createdAt: new Date(s.created_at).toLocaleDateString('fr-FR')
+    }));
+    swapIdCtr = Math.max(...swapRequests.map(s=>s.id), 0) + 1;
+    lsSave('swaps', swapRequests);
+  }
+}
+
+function tryParse(str, def) { try { return JSON.parse(str); } catch(e) { return def; } }
+
+function loadFromLocalStorage() {
+  const savedSlots = lsLoad('slots', []);
+  if (savedSlots.length > 0) { slots = savedSlots; slotIdCtr = Math.max(...slots.map(s=>s.id), 100) + 1; }
+  const savedReqs = lsLoad('requests', []);
+  if (savedReqs.length > 0) { requests = savedReqs; reqIdCtr = Math.max(...requests.map(r=>r.id), 0) + 1; }
+  const savedSwaps = lsLoad('swaps', []);
+  if (savedSwaps.length > 0) { swapRequests = savedSwaps; swapIdCtr = Math.max(...swapRequests.map(s=>s.id), 0) + 1; }
+  const countMap = lsLoad('guardCounts', {});
+  Object.entries(countMap).forEach(([id,c])=>{ const g=guards.find(x=>x.id===parseInt(id)); if(g) g.count=c; });
+  const phoneMap = lsLoad('guardPhones', {});
+  Object.entries(phoneMap).forEach(([id,p])=>{ const g=guards.find(x=>x.id===parseInt(id)); if(g) g.phone=p; });
+  buildLoginDropdown();
+}
+
+async function syncWithSupabase() {
+  // Keep for compatibility - now handled by loadFromSupabase
+}
+
+async function createTables() {
+  // Use Supabase SQL editor REST endpoint
+  const sql = `
+    CREATE TABLE IF NOT EXISTS exam_users (
+      id TEXT PRIMARY KEY,
+      name TEXT, role TEXT, dept TEXT, pass TEXT, phone TEXT,
+      created_at TIMESTAMP DEFAULT NOW()
+    );
+    CREATE TABLE IF NOT EXISTS exam_slots (
+      id SERIAL PRIMARY KEY,
+      room TEXT, capacity INT, date TEXT, time TEXT, dur TEXT, booked INT DEFAULT 0,
+      created_at TIMESTAMP DEFAULT NOW()
+    );
+    CREATE TABLE IF NOT EXISTS exam_guards (
+      id SERIAL PRIMARY KEY,
+      name TEXT, rank TEXT, count INT DEFAULT 0, phone TEXT,
+      created_at TIMESTAMP DEFAULT NOW()
+    );
+    CREATE TABLE IF NOT EXISTS exam_requests (
+      id SERIAL PRIMARY KEY,
+      user_id TEXT, module TEXT, semestre INT, date TEXT, time TEXT,
+      students INT, room TEXT, rooms TEXT, slot_ids TEXT,
+      assigned_guards TEXT, status TEXT DEFAULT 'pending',
+      created_at TIMESTAMP DEFAULT NOW()
+    );
+    CREATE TABLE IF NOT EXISTS exam_swaps (
+      id SERIAL PRIMARY KEY,
+      from_guard_id INT, from_guard_name TEXT,
+      to_guard_id INT, to_guard_name TEXT,
+      my_session_id INT, my_session TEXT, module1 TEXT,
+      her_session_id INT, her_session TEXT, module2 TEXT,
+      reason TEXT, status TEXT DEFAULT 'pending_colleague',
+      created_at TIMESTAMP DEFAULT NOW()
+    );
+  `;
+  await fetch(`${SUPABASE_URL}/rest/v1/rpc/exec_sql`, {
+    method:'POST',
+    headers:{ 'apikey':SUPABASE_KEY, 'Authorization':'Bearer '+SUPABASE_KEY, 'Content-Type':'application/json' },
+    body: JSON.stringify({ sql })
+  });
+}
+
+function showLoader(msg) {
+  let el = document.getElementById('dbLoader');
+  if (!el) {
+    el = document.createElement('div');
+    el.id = 'dbLoader';
+    el.style.cssText = 'position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:10px 20px;font-size:13px;color:var(--gold2);z-index:9998;';
+    document.body.appendChild(el);
+  }
+  el.textContent = msg;
+  el.style.display = msg ? 'block' : 'none';
+}
+
+// ── LOAD ALL DATA FROM DB ──
+async function loadAllData() {
+  showLoader('Chargement des données...');
+  try {
+    // Load users
+    const dbUsers = await sbSelect('exam_users');
+    if (dbUsers && dbUsers.length > 0) {
+      dbUsers.forEach(u => {
+        users[u.id] = { pass: u.pass||'', name: u.name, role: u.role, dept: u.dept, phone: u.phone||'' };
+      });
+    } else {
+      // First run: push default users to DB
+      await pushDefaultUsers();
+    }
+
+    // Load slots
+    const dbSlots = await sbSelect('exam_slots');
+    if (dbSlots && dbSlots.length > 0) {
+      slots = dbSlots.map(s => ({ id:s.id, room:s.room, capacity:s.capacity, date:s.date||'', time:s.time||'08:00', dur:s.dur||'2h00', booked:s.booked||0 }));
+      slotIdCtr = Math.max(...slots.map(s=>s.id)) + 1;
+    } else {
+      await pushDefaultSlots();
+    }
+
+    // Load guards
+    const dbGuards = await sbSelect('exam_guards');
+    if (dbGuards && dbGuards.length > 0) {
+      guards = dbGuards.map(g => ({ id:g.id, name:g.name, rank:g.rank||'Surveillante', count:g.count||0, phone:g.phone||'' }));
+      guardIdCtr = Math.max(...guards.map(g=>g.id)) + 1;
+    } else {
+      await pushDefaultGuards();
+    }
+
+    // Rebuild guard users from loaded guards
+    guards.forEach(g => {
+      const uid = 'guard_'+g.id;
+      if (!users[uid]) users[uid] = { pass:'', name:g.name, role:'guard', dept:'Surveillante', guardId:g.id };
+    });
+
+    // Load requests
+    const dbReqs = await sbSelect('exam_requests', '&order=id.asc');
+    if (dbReqs && dbReqs.length > 0) {
+      requests = dbReqs.map(r => ({
+        id:r.id, userId:r.user_id, module:r.module, semestre:r.semestre,
+        date:r.date, time:r.time, students:r.students,
+        room:r.room, rooms:r.rooms?JSON.parse(r.rooms):[], slotIds:r.slot_ids?JSON.parse(r.slot_ids):[],
+        assignedGuards:r.assigned_guards?JSON.parse(r.assigned_guards):null,
+        status:r.status
+      }));
+      reqIdCtr = Math.max(...requests.map(r=>r.id)) + 1;
+    }
+
+    // Load swaps
+    const dbSwaps = await sbSelect('exam_swaps', '&order=id.asc');
+    if (dbSwaps && dbSwaps.length > 0) {
+      swapRequests = dbSwaps.map(s => ({
+        id:s.id, fromGuardId:s.from_guard_id, fromGuardName:s.from_guard_name,
+        toGuardId:s.to_guard_id, toGuardName:s.to_guard_name,
+        mySessionId:s.my_session_id, mySession:s.my_session, module1:s.module1,
+        herSessionId:s.her_session_id, herSession:s.her_session, module2:s.module2,
+        reason:s.reason||'', status:s.status,
+        createdAt: new Date(s.created_at).toLocaleDateString('fr-FR')
+      }));
+      swapIdCtr = Math.max(...swapRequests.map(s=>s.id)) + 1;
+    }
+
+    buildLoginDropdown();
+    showLoader('');
+    showToast('✅ Données chargées depuis la base de données','success');
+  } catch(e) {
+    console.error('loadAllData error:', e);
+    showLoader('');
+  }
+}
+
+async function pushDefaultUsers() {
+  const toInsert = Object.entries(users).filter(([,u])=>u.role!=='guard').map(([id,u]) => ({
+    id, name:u.name, role:u.role, dept:u.dept, pass:u.pass||'', phone:u.phone||''
+  }));
+  if (toInsert.length) await sbInsert('exam_users', toInsert);
+}
+
+async function pushDefaultSlots() {
+  const toInsert = slots.map(s => ({ room:s.room, capacity:s.capacity, date:s.date||'', time:s.time, dur:s.dur||'2h00', booked:s.booked||0 }));
+  if (toInsert.length) { const res = await sbInsert('exam_slots', toInsert); if(res) slots = res.map(s => ({id:s.id,room:s.room,capacity:s.capacity,date:s.date||'',time:s.time,dur:s.dur||'2h00',booked:s.booked||0})); }
+}
+
+async function pushDefaultGuards() {
+  const toInsert = guards.map(g => ({ name:g.name, rank:g.rank||'Surveillante', count:g.count||0, phone:g.phone||'' }));
+  if (toInsert.length) { const res = await sbInsert('exam_guards', toInsert); if(res) guards = res.map(g => ({id:g.id,name:g.name,rank:g.rank||'Surveillante',count:g.count||0,phone:g.phone||''})); }
+}
+
+// ── DB SAVE WRAPPERS ──
+async function dbSaveSlot(slot) {
+  if (slot.id && slot.id < 9000) {
+    await sbUpdate('exam_slots', `&id=eq.${slot.id}`, { room:slot.room, capacity:slot.capacity, date:slot.date, time:slot.time, dur:slot.dur, booked:slot.booked });
+  } else {
+    const res = await sbInsert('exam_slots', { room:slot.room, capacity:slot.capacity, date:slot.date, time:slot.time, dur:slot.dur, booked:slot.booked });
+    if (res && res[0]) slot.id = res[0].id;
+  }
+}
+async function dbDeleteSlot(id) { await sbDelete('exam_slots', `&id=eq.${id}`); }
+
+async function dbSaveRequest(req) {
+  if (req._saved) {
+    await sbUpdate('exam_requests', `&id=eq.${req.id}`, { status:req.status, assigned_guards:JSON.stringify(req.assignedGuards||[]) });
+  } else {
+    const res = await sbInsert('exam_requests', {
+      user_id:req.userId, module:req.module, semestre:req.semestre,
+      date:req.date, time:req.time, students:req.students,
+      room:req.room, rooms:JSON.stringify(req.rooms||[]), slot_ids:JSON.stringify(req.slotIds||[]),
+      assigned_guards:JSON.stringify(req.assignedGuards||[]), status:req.status
+    });
+    if (res && res[0]) { req.id = res[0].id; req._saved = true; }
+  }
+}
+
+async function dbSaveGuard(guard) {
+  if (guard.id) await sbUpdate('exam_guards', `&id=eq.${guard.id}`, { count:guard.count, phone:guard.phone||'' });
+}
+
+async function dbSaveUser(uid, u) {
+  const exists = await sbSelect('exam_users', `&id=eq.${uid}`);
+  if (exists && exists.length > 0) {
+    await sbUpdate('exam_users', `&id=eq.${uid}`, { pass:u.pass||'', phone:u.phone||'', name:u.name, dept:u.dept });
+  } else {
+    await sbInsert('exam_users', { id:uid, name:u.name, role:u.role, dept:u.dept, pass:u.pass||'', phone:u.phone||'' });
+  }
+}
+
+async function dbSaveSwap(swap) {
+  if (swap._saved) {
+    await sbUpdate('exam_swaps', `&id=eq.${swap.id}`, { status:swap.status });
+  } else {
+    const res = await sbInsert('exam_swaps', {
+      from_guard_id:swap.fromGuardId, from_guard_name:swap.fromGuardName,
+      to_guard_id:swap.toGuardId, to_guard_name:swap.toGuardName,
+      my_session_id:swap.mySessionId, my_session:swap.mySession, module1:swap.module1,
+      her_session_id:swap.herSessionId, her_session:swap.herSession, module2:swap.module2,
+      reason:swap.reason||'', status:swap.status
+    });
+    if (res && res[0]) { swap.id = res[0].id; swap._saved = true; }
+  }
+}
+
+// ══════════════════════════════════════════════════════
+//  LOGO BASE64
+// ══════════════════════════════════════════════════════
+const LOGO = 'data:image/jpeg;base64,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';
+
+document.querySelectorAll('#navLogo,#heroLogo,#loginLogo,#appLogo').forEach(img => img.src = LOGO);
+
+// ══════════════════════════════════════════════════════
+//  ALL SPECIALTIES DATA
+// ══════════════════════════════════════════════════════
+const MODULES = {
+  amsp: {
+    name: "Assistant Médical de Santé Publique",
+    1: ["Anatomie Physiologie","Anthropologie/Psychologie/Psychosociologie","Hygiène Hospitalière","Législation/Ethique Prof/Déontologie","Santé Publique/Démographie/Economie de Santé","Secourisme","Soins de base","Remédiation linguistique/Techniques d'expression","Terminologie médicale"],
+    2: ["Communication (I)","Organisation et Gestion de l'espace de travail (I)","Gestion de l'information (I)","Technique de saisie et d'enregistrement (I)","Informatique/Internet","Projet d'éducation pour la santé (IEC)","Pharmacologie","Sémiologie","Nutrition"],
+    3: ["Communication (II)","Organisation et Gestion de l'espace de travail (II)","Gestion de l'information (II)","Les écrits professionnels (1)","Technique de saisie et d'enregistrement (II)","Méthodologie de résolution de problèmes","Français","Statistiques","Pathologies médicochirurgicales","Examens d'investigation"],
+    4: ["Organisation et Gestion de l'espace de travail (III)","Gestion de l'information (III)","Les écrits professionnels (II)","Technique de saisie et d'enregistrement (III)","Anglais professionnel","Méthodologie du mémoire professionnel","Système d'information hospitalière","Pratique d'expression","Organisation de la protection sociale"],
+    5: ["Gestion de l'information (IV)","Informatique/Bureautique (I)","Ecrits professionnels (III)","Interprétation et traduction","Etude et analyse de situation professionnelle (I)","Techniques multimédias","Comptabilité","Technologie de l'information et de la communication","Système management qualité"],
+    6: ["Informatique/Bureautique (II)","Etude et analyse de situation professionnelle (II)","Elaboration, Conduite et Présentation du mémoire professionnel","Encadrement et tutorat"]
+  },
+  diet: {
+    name: "Diététicien de Santé Publique",
+    1: ["Anatomie Physiologie","Anthropologie/Psychologie/Psychosociologie","Hygiène Hospitalière","Législation/Ethique Prof/Déontologie","Santé Publique/Démographie/Economie de Santé","Secourisme","Soins de base","Remédiation linguistique/Techniques d'expression","Terminologie médicale"],
+    2: ["Biochimie structurale","Biochimie métabolique","Microbiologie - Immunologie","Alimentation rationnelle et Bioénergétique","Enzymologie","Virologie","Mycologie","Parasitologie","Toxicologie","Mathématique","Physique","Chimie générale","Hématologie","Physiologie de la digestion","Chimie alimentaire","Pharmacie"],
+    3: ["Diététique du nourrisson","Nutrition du bien portant enfant","Etude des aliments","Organisation et gestion des services de restauration collective","Microbiologie alimentaire","Hygiène alimentaire","Physiologie de la nutrition","Biochimie des aliments","Informatique et internet"],
+    4: ["Alimentation du bien portant adulte","Physiopathologie de l'adulte I","Physiopathologie du nouveau-né, nourrisson et de l'enfant","Régimes thérapeutiques","Diététique thérapeutique du nouveau-né, nourrisson et de l'enfant","Diététique thérapeutique de l'adulte I","Technologie alimentaire","Communication relation patients"],
+    5: ["Physiopathologie de l'adulte II","Diététique thérapeutique de l'adulte II","Nutrition artificielle","Approfondissement en connaissance des aliments","Méthodologie du mémoire professionnel","Psychologie et psychopathologie","Communication (IEC)","Techniques culinaires","Statistique"],
+    6: ["Diététique thérapeutique de l'adulte III - Etude de cas","P.P.P. : approfondissement des objectifs professionnels","Projets tutorés","Gestion de la qualité et hygiène","Elaboration, Conduite et présentation du mémoire professionnel","Anglais médical","Encadrement et tutorat"]
+  },
+  hygiene: {
+    name: "Hygiéniste de Santé Publique",
+    1: ["Anatomie Physiologie","Anthropologie/Psychologie/Psychosociologie","Hygiène Hospitalière","Législation/Ethique Prof/Déontologie","Santé Publique/Démographie/Economie de Santé","Secourisme","Fondement de la profession paramédicale","Remédiation linguistique/Techniques d'expression","Terminologie médicale"],
+    2: ["Hygiène et sécurité dans les établissements de santé","Parasitologie","Epidémiologie (1ère partie)","Maladies infectieuses","Microbiologie alimentaire","Collecte et traitement des eaux usées","Gestion AEP (1ère partie)","Informatique/Internet","Statistiques sanitaire, mathématiques","Physique de fluides","Chimie sanitaire et chimie de l'environnement","Nutrition et notion de biochimie alimentaire"],
+    3: ["Gestion AEP (2ème partie)","Qualité et sécurité alimentaire","Epidémiologie (partie 2) logiciels en épidémiologie","Gestion et traitement des déchets solides","Méthodologie de mémoire professionnel","Hydrogéologie-Climatologie","Microbiologie sanitaire","Génétique microbienne"],
+    4: ["Hygiène et sécurité du travail","Entomologie Médicale (partie 1)","Rodontologie","Toxicologie / Evaluation des risques","IEC et éducation pour la santé","Méthodologie des inspections et enquêtes sanitaires","Géographie-climat-vecteurs","Ecologie générale et écosystème"],
+    5: ["Entomologie médicale (partie 2)","Lutte anti vectorielle et nomenclature des produits","Pollution environnementale des typologies des risques","Hygiène de l'habitat et urbanisme","Cartographie topographie et dessin technique","Anglais Scientifique"],
+    6: ["Gestion des risques en situation de catastrophes naturelles","Développement durable et environnement","Management de la sécurité sanitaire","Elaboration, conduite et présentation du mémoire professionnel"]
+  },
+  infirmier: {
+    name: "Infirmier de Santé Publique",
+    1: ["Anatomie Physiologie","Anthropologie/Psychologie/Psychosociologie","Hygiène Hospitalière","Législation/Ethique Prof/Déontologie","Santé Publique/Démographie/Economie de Santé","Secourisme","Soins de base","Remédiation linguistique/Techniques d'expression","Terminologie médicale"],
+    2: ["Anatomie physiologie – 2ème partie","Chirurgie","Soins infirmiers","Hygiène hospitalière – 2ème partie","Informatique et internet","Information/Education/Communication","Sciences de l'environnement","Sémiologie","Microbiologie parasitologie immunologie","Puériculture","Nutrition Diététique","Pharmacie"],
+    3: ["Maladies infectieuses","Pneumo-phtisiologie","Cardiologie-vasculaire","Gastro-entero-hépatologie","Pharmacologie et thérapeutique","Soins infirmiers en infectiologie, pneumologie, cardiologie vasculaire","La démarche de soins infirmiers","Concevoir le projet de soins infirmiers","Anglais Médicale","Santé familiale","Explorations biologiques","Explorations radiologiques"],
+    4: ["Réanimation","Traumatologie / Orthopédie","Urgences chirurgicales","Endocrinologie","Gynécologie / Obstétrique normale et pathologique","Pédiatrie","Soins infirmiers d'urgences chirurgicales, réanimation, traumatologie","Soins infirmiers en gynécologie, obstétrique, néonatalogie et pédiatrie","Conduire le projet de soins","Méthodologie de recherche et projet professionnel"],
+    5: ["Hématologie","Dermatologie vénérologie","Neuropsychiatrie","O.R.L","Ophtalmologie","Uro-néphrologie","Rhumatologie","Cancérologie","Gériatrie","Soins infirmiers en hématologie, Uro néphrologie, rhumatologie","Soins infirmiers en dermatologie vénérologie, O.R.L et ophtalmologie","Soins infirmiers en gériatrie, cancérologie, soins palliatifs","Organisation du travail infirmier"],
+    6: ["La démarche de soins infirmiers (ateliers d'applications)","Le projet de Soins (ateliers)","Organisation du travail infirmier (séminaire atelier)","Elaboration, conduite et présentation du mémoire professionnel"]
+  },
+  kine: {
+    name: "Kinésithérapeute de Santé Publique",
+    1: ["Anatomie Physiologie","Anthropologie/Psychologie/Psychosociologie","Hygiène Hospitalière","Législation/Ethique Prof/Déontologie","Santé Publique/Démographie/Economie de Santé","Secourisme","Soins de base","Remédiation linguistique/Techniques d'expression","Terminologie médicale"],
+    2: ["Anatomie descriptive et fonctionnelle","Technologie de base","Education physique et sportive","Hygiène et masso kinésithérapie","Méthodologie professionnelle : Démarche du bilan kinésithérapique","Nutrition","Pharmacie","Informatique/Internet","Sémiologie"],
+    3: ["Traumatologie orthopédie et lecture radiologique","Rhumatologie et lecture radiologique","Pathologie infantile et déviations vertébrales","Pathologies sportives","Anatomie descriptive et fonctionnelle","Technologie de base","Kinésithérapie en traumatologie","Kinésithérapie en rhumatologie","Kinésithérapie en pathologies infantiles","Kinésithérapie sportive"],
+    4: ["Traumatologie-orthopédie et lecture radiologique (2ème partie)","Rhumatologie et lecture radiologique (2ème partie)","Pathologie uro-génitale","Amputation et appareillage","Pathologies médico-chirurgicales","Neuro-anatomo-physiologie","Kinésithérapie en traumatologie orthopédie (2ème partie)","Kinésithérapie en rhumatologie (2ème partie)","Kinésithérapie des amputés et appareillés","Kinésithérapie en uro-génitale","Kinésithérapie en P.M.C.","Méthodologie du mémoire professionnel"],
+    5: ["Neuro-pathologies","Pathologies respiratoires, lecture radiologique et réanimation","Pathologies cardiaques","Kinésithérapie des pathologies neurologiques","Kinésithérapie des pathologies respiratoires et réanimation","Kinésithérapie en pathologies cardiovasculaires"],
+    6: ["Techniques spécialisées en kinésithérapie","Psychologie, sociologie et relation thérapeutique","Kinésithérapie en gériatrie","Elaboration, Conduite et présentation du mémoire professionnel","Ergonomie","Information, Education et Communication","Pédagogie et tutorat","Projet de l'étudiant"]
+  },
+  labo: {
+    name: "Laborantin de Santé Publique",
+    1: ["Anatomie Physiologie","Anthropologie/Psychologie/Psychosociologie","Hygiène Hospitalière","Législation/Ethique Prof/Déontologie","Santé Publique/Démographie/Economie de Santé","Secourisme","Soins de base","Remédiation linguistique/Techniques d'expression","Terminologie médicale"],
+    2: ["Chimie","Biophysique","Maths statistiques","Prélèvement et approche du malade","Sémiologie","Pharmacie","Informatique/Internet","Nutrition","Anglais technique"],
+    3: ["Bactériologie générale","Biochimie générale","Immunologie","Bactériologie systématique","Parasitologie","Technologie et maintenance"],
+    4: ["Anatomie et cytopathologie","Hématologie générale","Mycologie","Bactériologie appliquée","Biochimie appliquée","Méthodologie du mémoire professionnel"],
+    5: ["Biologie moléculaire et cellulaire","Virologie","Sérologie","Hématologie appliquée","Parasitologie mycologie appliquées"],
+    6: ["Toxicologie","Bactériologie","Biochimie","Séro-hématologie","Parasitologie-mycologie","Anatomo-cytopathologie appliquée","Elaboration, conduite et présentation du mémoire professionnel","Information Education Communication"]
+  },
+  imagerie: {
+    name: "Manipulateur en Imagerie Médicale",
+    1: ["Anatomie Physiologie","Anthropologie/Psychologie/Psychosociologie","Hygiène Hospitalière","Législation/Ethique Prof/Déontologie","Santé Publique/Démographie/Economie de Santé","Secourisme","Soins de base","Remédiation linguistique/Techniques d'expression","Terminologie médicale"],
+    2: ["Physique fondamentale","Formation et traitement d'image","Physique appliquée et technologie Imagerie de projection","Radiobiologie","Radioprotection","Examens radiologiques osseux 1","Pharmacie","Techniques de soins"],
+    3: ["Examens radiologiques osseux 2","Examens viscéraux","Radiopédiatrie","Informatique et internet","Pharmacologie","Examens biologiques","Pathologies / Sémiologie / Sémiologie Radiologique","Nutrition"],
+    4: ["Examens spécialisés","TDM : Physique appliquée et technologie","Exploration TDM","Echographie : Physique appliquée et technologie / Techniques / Sémiologie","Information, éducation, communication","Anglais médical","Méthodologie de recherche et statistiques","Oncologie"],
+    5: ["IRM : Physique appliquée et technologie","Exploration en IRM","Sémiologie de l'imagerie en coupes TDM et IRM","Radiologie interventionnelle","Explorations électriques neuromusculaires","Organisation et gestion d'un service d'imagerie médicale","Dosimétrie"],
+    6: ["Médecine nucléaire","Radiothérapie","Réseaux de communication et archivage d'imagerie","Contrôle de qualité et assurance en imagerie médicale et thérapeutique","Elaboration, Conduite et Présentation du mémoire Professionnel"]
+  },
+  pharma: {
+    name: "Préparateur en Pharmacie de Santé Publique",
+    1: ["Anatomie Physiologie","Anthropologie/Psychologie/Psychosociologie","Hygiène Hospitalière","Législation/Ethique Prof/Déontologie","Santé Publique/Démographie/Economie de Santé","Secourisme","Soins de base","Remédiation linguistique/Techniques d'expression","Terminologie médicale"],
+    2: ["Pharmacie générale","Physique pharmaceutique","Chimie générale","Botanique","Chimie organique","Pharmacie galénique 1ère partie","Informatique & logiciels de pharmacie","Maladies infectieuses"],
+    3: ["Chimie analytique","Pharmacologie générale","Pharmacognosie 1ère partie","Pharmacie galénique 2ème partie","Phytothérapie","Informatique (logiciel pharmacie)","Microbiologie","Immunologie"],
+    4: ["Chimie thérapeutique 1ère partie","Toxicologie","Reconnaissance","Pharmacologie spéciale 2ème partie","Méthodologie de recherche 1ère partie","Pathologies médico-chirurgicales"],
+    5: ["Chimie thérapeutique 2ème partie","Discussion d'ordonnance","Gestion à l'officine 1ère partie","Reconnaissance 2ème partie","Communication professionnelle","Dispositifs médicaux"],
+    6: ["Droit pharmaceutique","Comptabilité et gestion","Gestion pharmaceutique 2ème partie","Homéopathie","Elaboration, Conduite et présentation du mémoire professionnel"]
+  },
+  prothese: {
+    name: "Prothésiste Dentaire de Santé Publique",
+    1: ["Anatomie Physiologie","Anthropologie/Psychologie/Psychosociologie","Hygiène Hospitalière","Législation/Ethique Prof/Déontologie","Santé Publique/Démographie/Economie de Santé","Secourisme","Soins de base","Remédiation linguistique/Techniques d'expression","Terminologie médicale"],
+    2: ["Morphologie dentaire (1ère partie)","Dessin (1ère partie)","Informatique/Internet","Sculpture (1ère partie)","Biomatériaux (1ère partie)","Physiologie de l'appareil manducateur (1ère partie)","Prothèse partielle en résine (1ère partie)","Vocabulaire médico-dentaire"],
+    3: ["Prothèse partielle en résine (2ème partie)","Prothèse totale (1ère partie)","Dessin (2ème partie)","Morphologie dentaire (2ème partie)","Sculpture (2ème partie)","Prothèse conjointe (1ère partie)","Biomatériaux (2ème partie)","Physiologie de l'appareil manducateur (2ème partie)","Nutrition","Pharmacologie"],
+    4: ["Prothèse totale (2ème partie)","Prothèse conjointe (2ème partie)","Prothèse Piezographique","Prothèse Maxillo-faciale (1ère partie)","Méthodologie du mémoire professionnel","Orthopédie dento-faciale ODF (1ère partie)","Prothèse partielle métallique (1ère partie)","Hygiène bucco-dentaire"],
+    5: ["Prothèse partielle métallique (2ème partie)","Prothèse conjointe (3ème partie)","Gestion et organisation d'un laboratoire de prothèse dentaire","Céramique (1ère partie)","Implants (1ère partie)","Orthopédie dento-faciale ODF (2ème partie)","Attachements (1ère partie)"],
+    6: ["Attachements (2ème partie)","Céramique (2ème partie)","Projet d'éducation pour la santé (IEC)","Implants (2ème partie)","Prothèse maxillo-faciale (2ème partie)","Anglais professionnel","Encadrement et tutorat"]
+  },
+  sagefemme: {
+    name: "Sage-Femme de Santé Publique",
+    1: ["Anatomie Physiologie","Anthropologie/Psychologie/Psychosociologie","Hygiène Hospitalière","Législation/Ethique Prof/Déontologie","Santé Publique/Démographie/Economie de Santé","Secourisme","Soins de base","Remédiation linguistique/Techniques d'expression","Terminologie médicale"],
+    2: ["Anatomie physiologie obstétricale","Embryologie","Génétique","Soins infirmiers","Information/Education/Communication","Pharmacie","Microbiologie","Sémiologie","Nutrition","Statistiques","Informatique et internet"],
+    3: ["Obstétrique physiologique (1ère partie)","Soins obstétricaux (1ère partie)","Puériculture","Santé maternelle et infantile","Examens biologiques"],
+    4: ["Obstétrique physiologique (2ème partie)","Soins obstétricaux (2ème partie)","Néonatologie","Diététique infantile","Analyse des pratiques professionnelles","Santé reproductive et planning familial","Obstétrique et pathologie 1ère partie","Pédiatrie","Pharmacie spécifique"],
+    5: ["Obstétrique et pathologie 2ème partie","Gynécologie","Bases en maïeutique","Anesthésie réanimation"],
+    6: ["Obstétrique et pathologie 2ème partie","Gynécologie","Bases en maïeutique","Anesthésie réanimation"]
+  }
+};
+
+// ══════════════════════════════════════════════════════
+//  STATE
+// ══════════════════════════════════════════════════════
+let users = {
+  admin:   {pass:'admin123', name:'M. ZEKRI Ammar',        role:'admin',   dept:'Service des Examens & Concours'},
+  directeur: {pass:'dir2026',  name:'M. GADI Lotfi',          role:'viewer',  dept:'Directeur de l\'Institut'},
+  sousdirecteur: {pass:'sd2026', name:'M. SAOUDI Mabrouk Zine Alabidine', role:'viewer', dept:'Sous-Directeur — Affaires Pédagogiques'},
+};
+
+// Real specialist users with real names
+users['amsp']     = {pass:'', name:'Mme BELOKBIA Yasmine',  role:'specialist', dept:'Assistant Médical de Santé Publique'};
+users['diet']     = {pass:'', name:'Mme CHAOUCHE Radia',    role:'specialist', dept:'Diététicien de Santé Publique'};
+users['hygiene']  = {pass:'', name:'Mlle ANSAR Imane',      role:'specialist', dept:'Hygiéniste de Santé Publique'};
+users['infirmier']= {pass:'', name:'Mme OUKIL Fouzia',      role:'specialist', dept:'Infirmier de Santé Publique'};
+users['kine']     = {pass:'', name:'M. MEDDOURA Samir',     role:'specialist', dept:'Kinésithérapeute de Santé Publique'};
+users['labo']     = {pass:'', name:'M. FARHAT Djamel',      role:'specialist', dept:'Laborantin de Santé Publique'};
+users['imagerie'] = {pass:'', name:'M. DEHINA Messaoud',    role:'specialist', dept:'Manipulateur en Imagerie Médicale'};
+users['pharma']   = {pass:'', name:'M. CHIHI Abderrahim',   role:'specialist', dept:'Préparateur en Pharmacie de Santé Publique'};
+users['prothese'] = {pass:'', name:'M. KHALDI Kamel',       role:'specialist', dept:'Prothésiste Dentaire de Santé Publique'};
+users['sagefemme']= {pass:'', name:'Mme BERBECHE Amel / Mme CHERIF Sonia / Mlle KHERIF Samiha', role:'specialist', dept:'Sage-Femme de Santé Publique'};
+
+// Real rooms (Sites Pédagogiques)
+let slots = [
+  {id:1, room:'Salle 01',          capacity:50,  date:'',time:'08:00',dur:'2h00',booked:0},
+  {id:2, room:'Salle 02',          capacity:50,  date:'',time:'08:00',dur:'2h00',booked:0},
+  {id:3, room:'Salle 03',          capacity:100, date:'',time:'08:00',dur:'2h00',booked:0},
+  {id:4, room:'Salle 04',          capacity:50,  date:'',time:'08:00',dur:'2h00',booked:0},
+  {id:5, room:'Salle 05',          capacity:50,  date:'',time:'08:00',dur:'2h00',booked:0},
+  {id:6, room:'Salle 06',          capacity:50,  date:'',time:'08:00',dur:'2h00',booked:0},
+  {id:7, room:'Salle 07',          capacity:50,  date:'',time:'08:00',dur:'2h00',booked:0},
+  {id:8, room:'Salle 08',          capacity:50,  date:'',time:'08:00',dur:'2h00',booked:0},
+  {id:9, room:'Salle 09',          capacity:50,  date:'',time:'08:00',dur:'2h00',booked:0},
+  {id:10,room:'Salle 10',          capacity:50,  date:'',time:'08:00',dur:'2h00',booked:0},
+  {id:11,room:'Salle 11',          capacity:50,  date:'',time:'08:00',dur:'2h00',booked:0},
+  {id:12,room:'Salle 12',          capacity:50,  date:'',time:'08:00',dur:'2h00',booked:0},
+  {id:13,room:'Salle 13 (CDR)',    capacity:100, date:'',time:'08:00',dur:'2h00',booked:0},
+  {id:14,room:'Salle 14',          capacity:30,  date:'',time:'08:00',dur:'2h00',booked:0},
+  {id:15,room:'Salle 15',          capacity:30,  date:'',time:'08:00',dur:'2h00',booked:0},
+  {id:16,room:'Amphithéâtre',      capacity:50,  date:'',time:'08:00',dur:'2h00',booked:0},
+  {id:17,room:'Grande Salle',      capacity:120, date:'',time:'08:00',dur:'2h00',booked:0},
+  {id:18,room:'Salle Polyvalente', capacity:50,  date:'',time:'08:00',dur:'2h00',booked:0},
+];
+
+// Real guards list
+let guards = [
+  {id:1, name:'Mlle MERIDJA Dounia',    rank:'Surveillante', count:0, phone:''},
+  {id:3, name:'Mme SOLTANE Oulaia',     rank:'Surveillante', count:0, phone:''},
+  {id:4, name:'Mlle MAAMRI Imane',      rank:'Surveillante', count:0, phone:''},
+  {id:5, name:'Mme AGGOUNE Nawal',      rank:'Surveillante', count:0, phone:''},
+  {id:6, name:'Mme MECHRAOUI Roukia',   rank:'Surveillante', count:0, phone:''},
+  {id:7, name:'Mlle TRODI Samira',      rank:'Surveillante', count:0, phone:''},
+  {id:8, name:'Mme BENAMAR Meriem',     rank:'Surveillante', count:0, phone:''},
+  {id:9, name:'Mme ASSADI Nahed',       rank:'Surveillante', count:0, phone:''},
+  {id:10,name:'Mme SELLAMI Souraia',    rank:'Surveillante', count:0, phone:''},
+  {id:11,name:'Mme SEKAK Sonia',        rank:'Surveillante', count:0, phone:''},
+  {id:12,name:'Mme KHAZZAR Sara',       rank:'Surveillante', count:0, phone:''},
+  {id:13,name:'Mme RAOUANE Amira',      rank:'Surveillante', count:0, phone:''},
+  {id:14,name:'Mlle TELLOUL Manel',     rank:'Surveillante', count:0, phone:''},
+  {id:15,name:'Mme BOUKHALFA Karima',   rank:'Surveillante', count:0, phone:''},
+  {id:16,name:'Mme BELKAROUI Linda',    rank:'Surveillante', count:0, phone:''},
+  {id:17,name:'Mlle RAHAB Rayane',      rank:'Surveillante', count:0, phone:''},
+];
+
+let requests = [];
+let slotIdCtr = 19, reqIdCtr = 1, guardIdCtr = 17;
+let currentUser = null;
+
+// Guard users (each guard can login)
+const GUARD_USERS = {};
+guards.forEach(g => {
+  const uid = 'guard_' + g.id;
+  GUARD_USERS[uid] = {pass:'guard'+g.id, name:g.name, role:'guard', dept:'Surveillante', guardId:g.id};
+});
+Object.assign(users, GUARD_USERS);
+
+// Swap requests list
+let swapRequests = [];
+let swapIdCtr = 1;
+
+// ══════════════════════════════════════════════════════
+//  BUILD LOGIN DROPDOWN
+// ══════════════════════════════════════════════════════
+function buildLoginDropdown() {
+  const sel = document.getElementById('loginUser');
+  sel.innerHTML = '<option value="">— Choisir —</option>';
+  // Admin
+  const ao = document.createElement('option');
+  ao.value = 'admin'; ao.textContent = '👑 M. ZEKRI Ammar';
+  sel.appendChild(ao);
+  // Viewers (direction)
+  const og0 = document.createElement('optgroup'); og0.label = '── Direction ──';
+  ['directeur','sousdirecteur'].forEach(uid => {
+    const u = users[uid];
+    if(!u) return;
+    const o = document.createElement('option');
+    o.value = uid; o.textContent = '👁️ ' + u.name;
+    og0.appendChild(o);
+  });
+  sel.appendChild(og0);
+  // Specialists
+  const og1 = document.createElement('optgroup'); og1.label = '── Responsables de Spécialités ──';
+  Object.entries(users).filter(([,u])=>u.role==='specialist').forEach(([uid,u]) => {
+    const o = document.createElement('option');
+    o.value = uid; o.textContent = u.name + ' — ' + u.dept;
+    og1.appendChild(o);
+  });
+  sel.appendChild(og1);
+  // Guards
+  const og2 = document.createElement('optgroup'); og2.label = '── Surveillantes ──';
+  guards.forEach(g => {
+    const o = document.createElement('option');
+    o.value = 'guard_'+g.id; o.textContent = '👩‍🏫 ' + g.name;
+    og2.appendChild(o);
+  });
+  sel.appendChild(og2);
+}
+
+// ══════════════════════════════════════════════════════
+//  LOGIN / LOGOUT
+// ══════════════════════════════════════════════════════
+function openLogin() {
+  buildLoginDropdown();
+  document.getElementById('loginWrap').style.display = 'flex';
+}
+function closeLogin() {
+  document.getElementById('loginWrap').style.display = 'none';
+}
+function doLogin() {
+  const uid = document.getElementById('loginUser').value;
+  const pass = document.getElementById('loginPass').value;
+  const err = document.getElementById('loginErr');
+  if (!uid) { err.textContent='Veuillez sélectionner un compte'; err.style.display='block'; return; }
+  const u = users[uid];
+  if (!u || !u.pass) { err.textContent='Compte non activé — contactez M. ZEKRI Ammar'; err.style.display='block'; return; }
+  if (pass !== u.pass) { err.textContent='Mot de passe incorrect'; err.style.display='block'; return; }
+  err.style.display = 'none';
+  currentUser = {id:uid,...u};
+  document.getElementById('loginWrap').style.display = 'none';
+  document.getElementById('landing').style.display = 'none';
+  document.getElementById('appWrap').style.display = 'flex';
+  document.getElementById('hUser').textContent = u.name;
+  document.getElementById('hRole').textContent = u.dept;
+  if (u.role === 'admin') {
+    document.getElementById('adminView').style.display = 'block';
+    showLoader('⏳ Chargement...');
+    loadFromSupabase().then(()=>{ showLoader(''); renderAdminDash(); }).catch(()=>{ showLoader(''); renderAdminDash(); });
+  } else if (u.role === 'viewer') {
+    document.getElementById('viewerView').style.display = 'block';
+    showLoader('⏳ Chargement...');
+    loadFromSupabase().then(()=>{ showLoader(''); renderViewerDash(); }).catch(()=>{ showLoader(''); renderViewerDash(); });
+  }
+  else if (u.role === 'guard') { document.getElementById('guardView').style.display = 'block'; renderGuardView(); }
+  else {
+    document.getElementById('specView').style.display = 'block';
+    // Reload fresh data from Supabase before showing specialist view
+    showLoader('⏳ Chargement...');
+    loadFromSupabase().then(()=>{
+      showLoader('');
+      renderSpecView();
+    }).catch(()=>{ showLoader(''); renderSpecView(); });
+  }
+}
+function logout() {
+  currentUser = null;
+  document.getElementById('appWrap').style.display = 'none';
+  document.getElementById('adminView').style.display = 'none';
+  document.getElementById('specView').style.display = 'none';
+  document.getElementById('guardView').style.display = 'none';
+  document.getElementById('viewerView').style.display = 'none';
+  document.getElementById('landing').style.display = 'flex';
+  document.getElementById('loginUser').value = '';
+  document.getElementById('loginPass').value = '';
+  // reset tabs
+  document.querySelectorAll('.tc').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  const ft = document.querySelector('#adminView .tc');
+  const ftb = document.querySelector('#adminView .tab');
+  if(ft) ft.classList.add('active');
+  if(ftb) ftb.classList.add('active');
+}
+document.addEventListener('keydown', e => {
+  if(e.key==='Enter' && document.getElementById('loginWrap').style.display==='flex') doLogin();
+});
+
+// ══════════════════════════════════════════════════════
+//  TABS
+// ══════════════════════════════════════════════════════
+function swTab(id, btn) {
+  document.querySelectorAll('.tc').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+  if(id==='tSlots') renderSlots();
+  if(id==='tReqs') renderAllReqs();
+  if(id==='tGuards') renderGuards();
+  if(id==='tUsers') renderUsers();
+  if(id==='tSwaps') renderAdminSwaps();
+  if(id==='tPasswords') renderPasswordManager();
+  if(id==='tWeek') {}
+}
+
+// ══════════════════════════════════════════════════════
+//  ADMIN DASHBOARD
+// ══════════════════════════════════════════════════════
+function renderAdminDash() {
+  const specs = Object.values(users).filter(u=>u.role==='specialist').length;
+  const total = requests.length;
+  const approved = requests.filter(r=>r.status==='approved').length;
+  const pending = requests.filter(r=>r.status==='pending').length;
+  const rejected = requests.filter(r=>r.status==='rejected').length;
+  document.getElementById('adminStats').innerHTML = `
+    <div class="sc"><div class="si" style="background:rgba(201,153,58,0.15)">🎓</div><div class="sv"><h3>${specs}</h3><p>Spécialités</p></div></div>
+    <div class="sc"><div class="si" style="background:rgba(41,128,185,0.15)">🏛️</div><div class="sv"><h3>${slots.length}</h3><p>Créneaux</p></div></div>
+    <div class="sc"><div class="si" style="background:rgba(230,126,34,0.15)">⏳</div><div class="sv"><h3>${pending}</h3><p>En attente</p></div></div>
+    <div class="sc"><div class="si" style="background:rgba(39,174,96,0.15)">✅</div><div class="sv"><h3>${approved}</h3><p>Approuvées</p></div></div>
+    <div class="sc"><div class="si" style="background:rgba(231,76,60,0.15)">❌</div><div class="sv"><h3>${rejected}</h3><p>Refusées</p></div></div>
+    <div class="sc"><div class="si" style="background:rgba(39,174,96,0.15)">👨‍🏫</div><div class="sv"><h3>${guards.length}</h3><p>Surveillants</p></div></div>
+    <div class="sc"><div class="si" style="background:rgba(230,126,34,0.15)">🔄</div><div class="sv"><h3>${swapRequests.filter(s=>s.status==='accepted').length}</h3><p>Échanges à valider</p></div></div>
+  `;
+  const tb = document.getElementById('dashBody');
+  if(!requests.length){ tb.innerHTML='<tr><td colspan="9" style="text-align:center;color:var(--text2);padding:28px">Aucune demande pour l\'instant</td></tr>'; return; }
+  tb.innerHTML = requests.slice().reverse().slice(0,10).map(r=>reqRow(r)).join('');
+}
+
+function reqRow(r) {
+  const u = users[r.userId];
+  const rooms = r.rooms ? r.rooms.join(', ') : r.room;
+  const days = r.preferredDays && r.preferredDays.length ? `<div style="font-size:10px;color:var(--gold2)">📅 ${r.preferredDays.join(', ')}</div>` : '';
+  return `<tr>
+    <td><b>${u?.dept||r.userId}</b></td>
+    <td style="max-width:180px;white-space:normal;font-size:12px">${r.module}${days}</td>
+    <td>S${r.semestre}</td>
+    <td>${r.date||'—'}</td><td>${r.time||'11:30'}</td><td>${r.students}</td>
+    <td style="font-size:12px">${rooms}</td>
+    <td><span class="badge ${r.status==='approved'?'bg':r.status==='rejected'?'br':'bo'}">${r.status==='approved'?'✅ Approuvé':r.status==='rejected'?'❌ Refusé':'⏳ En attente'}</span></td>
+    <td style="display:flex;gap:4px;flex-wrap:wrap">
+      ${r.status==='pending'?`<button class="btn btn-sm btn-s" onclick="approveR(${r.id})">✓</button><button class="btn btn-sm btn-d" onclick="rejectR(${r.id})">✗</button>`:''}
+      <button class="btn btn-sm" style="background:rgba(231,76,60,0.1);color:#ff6b6b;border:1px solid rgba(231,76,60,0.2);padding:4px 8px;font-size:11px" onclick="deleteReq(${r.id},true)">🗑️</button>
+    </td>
+  </tr>`;
+}
+
+function renderAllReqs() {
+  const tb = document.getElementById('allReqBody');
+  if(!requests.length){ tb.innerHTML='<tr><td colspan="9" style="text-align:center;color:var(--text2);padding:28px">Aucune demande</td></tr>'; return; }
+  tb.innerHTML = requests.slice().reverse().map(r=>reqRow(r)).join('');
+}
+
+async function clearAllRequests() {
+  if(!confirm('⚠️ Supprimer TOUTES les demandes ? Cette action est irréversible.')) return;
+  // Free all slots
+  requests.forEach(r => {
+    if(r.slotIds) r.slotIds.forEach(sid=>{
+      const s=slots.find(x=>x.id===sid);
+      if(s) s.booked=Math.max(0,s.booked-r.students);
+    });
+  });
+  requests=[];
+  reqIdCtr=1;
+  lsSave('requests',[]);
+  lsSave('slots',slots);
+  // Delete from Supabase
+  try { const db=await getSupabase(); await db.from('exam_requests').delete().neq('id',0); } catch(e){}
+  slots.forEach(s=>dbSaveSlot(s));
+  refreshAdmin();
+  showToast('🗑️ Toutes les demandes supprimées','warn');
+}
+
+function approveR(id) {
+  const r=requests.find(x=>x.id===id);
+  if(r){ r.status='approved'; r._saved=true; lsSave('requests',requests); dbSaveRequest(r); refreshAdmin(); showToast('✅ Demande approuvée','success'); }
+}
+function rejectR(id) {
+  const r=requests.find(x=>x.id===id);
+  if(r){
+    if(r.slotIds) r.slotIds.forEach(sid=>{ const s=slots.find(x=>x.id===sid); if(s){ s.booked=Math.max(0,s.booked-r.students); dbSaveSlot(s); } });
+    r.status='rejected'; r._saved=true; lsSave('requests',requests); lsSave('slots',slots); dbSaveRequest(r); refreshAdmin(); showToast('❌ Demande refusée','warn');
+  }
+}
+async function deleteReq(id, fromAdmin=false) {
+  if(!confirm('Supprimer définitivement cette demande ?')) return;
+  const r=requests.find(x=>x.id===id);
+  if(r){
+    // Free slots
+    if(r.slotIds) r.slotIds.forEach(sid=>{ const s=slots.find(x=>x.id===sid); if(s){ s.booked=Math.max(0,s.booked-r.students); dbSaveSlot(s); } });
+    requests = requests.filter(x=>x.id!==id);
+    lsSave('requests',requests); lsSave('slots',slots);
+    // Delete from Supabase
+    try { const db=await getSupabase(); await db.from('exam_requests').delete().eq('id',id); } catch(e){}
+    if(fromAdmin){ refreshAdmin(); } else { renderSpecView(); }
+    showToast('🗑️ Demande supprimée','warn');
+  }
+}
+function refreshAdmin() { renderAdminDash(); renderAllReqs(); renderSlots(); }
+
+// ══════════════════════════════════════════════════════
+//  SLOTS
+// ══════════════════════════════════════════════════════
+const ROOM_CAPS = {
+  'Salle 01':50,'Salle 02':50,'Salle 03':100,'Salle 04':50,'Salle 05':50,
+  'Salle 06':50,'Salle 07':50,'Salle 08':50,'Salle 09':50,'Salle 10':50,
+  'Salle 11':50,'Salle 12':50,'Salle 13 (CDR)':100,'Salle 14':30,'Salle 15':30,
+  'Amphithéâtre':50,'Grande Salle':120,'Salle Polyvalente':50
+};
+
+// Show/hide manual input
+document.addEventListener('change', e => {
+  if(e.target.id==='rName'){
+    document.getElementById('rNameManualWrap').style.display = e.target.value==='__autre__'?'block':'none';
+  }
+});
+
+function addSlot() {
+  let roomSel = document.getElementById('rName').value;
+  let room = roomSel === '__autre__' ? document.getElementById('rNameManual').value.trim() : roomSel;
+  const cap = ROOM_CAPS[room] || 50;
+  const date = document.getElementById('rDate').value;
+  const time = document.getElementById('rTime').value;
+  const dur  = document.getElementById('rDur').value;
+  if(!room||!date){showToast('Veuillez choisir la salle et la date','error');return;}
+  const newSlot = {id:slotIdCtr++,room,capacity:cap,date,time,dur,booked:0};
+  slots.push(newSlot);
+  document.getElementById('rName').value='';
+  document.getElementById('rDate').value='';
+  document.getElementById('rNameManualWrap').style.display='none';
+  lsSave('slots', slots);
+  dbSaveSlot(newSlot);
+  renderSlots(); renderAdminDash();
+  showToast('✅ Créneau ajouté — '+room+' ('+cap+' places)','success');
+}
+
+function renderSlots() {
+  const active = slots.filter(s=>s.date);
+  document.getElementById('slotCnt').textContent = active.length;
+  const el = document.getElementById('slotsList');
+  if(!active.length){
+    el.innerHTML='<div class="empty"><div class="ei">📅</div><p>Aucun créneau programmé.<br><small>Choisissez une salle, une date et une heure.</small></p></div>';
+    return;
+  }
+  const totalCap=active.reduce((a,s)=>a+s.capacity,0);
+  const totalBook=active.reduce((a,s)=>a+s.booked,0);
+  el.innerHTML=`<div style="background:var(--gold3);border:1px solid var(--border);border-radius:9px;padding:10px 14px;margin-bottom:12px;font-size:12px">
+    📊 <b>${active.length}</b> créneaux &nbsp;|&nbsp; Capacité totale : <b>${totalCap}</b> &nbsp;|&nbsp; Réservées : <b>${totalBook}</b>
+  </div>`+active.map(s=>{
+    const pct=Math.min(Math.round((s.booked/s.capacity)*100),100);
+    const full=s.booked>=s.capacity;
+    const col=pct>=100?'#e74c3c':pct>=70?'#e67e22':'#27ae60';
+    return `<div class="slot-card ${full?'full':''}">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+        <b>🏛️ ${s.room}</b>
+        <span class="badge ${full?'br':'bg'}">${full?'🔴 Pleine':'🟢 Disponible'}</span>
+      </div>
+      <div style="font-size:12px;color:var(--text2)">📅 ${s.date} &nbsp;⏰ ${s.time} &nbsp;⏱️ ${s.dur||'2h00'} &nbsp;👥 ${s.booked}/${s.capacity}</div>
+      <div class="cbar"><div class="cfill" style="width:${pct}%;background:${col}"></div></div>
+      <button class="btn btn-sm btn-d" onclick="removeSlot(${s.id})" style="margin-top:8px">🗑️ Supprimer</button>
+    </div>`;
+  }).join('');
+}
+
+function removeSlot(id){
+  slots=slots.filter(s=>s.id!==id);
+  lsSave('slots', slots);
+  dbDeleteSlot(id);
+  renderSlots(); renderAdminDash();
+  showToast('🗑️ Créneau supprimé','warn');
+}
+
+// ══════════════════════════════════════════════════════
+//  GUARDS
+// ══════════════════════════════════════════════════════
+function addGuard(){
+  const name=document.getElementById('gName').value.trim();
+  const rank=document.getElementById('gRank').value.trim();
+  if(!name){showToast('Entrez le nom du surveillant','error');return;}
+  guards.push({id:guardIdCtr++,name,rank:rank||'—',count:0});
+  document.getElementById('gName').value='';
+  document.getElementById('gRank').value='';
+  renderGuards();
+  showToast('✅ Surveillant ajouté','success');
+}
+
+function renderGuards(){
+  document.getElementById('guardCnt').textContent=guards.length;
+  const el=document.getElementById('guardsList');
+  if(!guards.length){el.innerHTML='<div class="empty"><div class="ei">👨‍🏫</div><p>Aucun surveillant</p></div>';return;}
+  el.innerHTML=guards.map(g=>`
+    <div class="gcard">
+      <div class="gcard-l">
+        <div class="gavatar">${g.name.charAt(0)}</div>
+        <div class="gcard-info"><strong>${g.name}</strong><small>${g.rank}</small></div>
+      </div>
+      <div class="gcard-r">
+        <span class="guard-count">${g.count} séances</span>
+        <button class="btn btn-sm btn-d" onclick="removeGuard(${g.id})">🗑️</button>
+      </div>
+    </div>
+  `).join('');
+  renderGuardStats();
+}
+
+function removeGuard(id){
+  guards=guards.filter(g=>g.id!==id);
+  renderGuards();
+  showToast('🗑️ Surveillant supprimé','warn');
+}
+
+function renderGuardStats(){
+  const el=document.getElementById('guardStats');
+  if(!guards.length){el.innerHTML='<div class="empty"><div class="ei">📊</div><p>Aucun surveillant</p></div>';return;}
+  const sorted=[...guards].sort((a,b)=>b.count-a.count);
+  const max=Math.max(...guards.map(g=>g.count),1);
+  el.innerHTML=`<div style="display:grid;gap:8px">`+sorted.map(g=>{
+    const pct=Math.round((g.count/max)*100);
+    return `<div style="display:flex;align-items:center;gap:10px">
+      <div style="width:160px;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${g.name}</div>
+      <div style="flex:1"><div class="cbar"><div class="cfill" style="width:${pct}%;background:var(--gold)"></div></div></div>
+      <div style="font-size:12px;color:var(--gold2);width:60px;text-align:right">${g.count} séances</div>
+    </div>`;
+  }).join('')+`</div>`;
+}
+
+// ══════════════════════════════════════════════════════
+//  USERS MANAGEMENT
+// ══════════════════════════════════════════════════════
+function addUser(){
+  const uid=document.getElementById('newUid').value.trim().toLowerCase().replace(/\s/g,'');
+  const name=document.getElementById('newUname').value.trim();
+  const pass=document.getElementById('newUpass').value;
+  if(!uid||!name||!pass){showToast('Veuillez remplir tous les champs','error');return;}
+  if(users[uid]){showToast('Ce code existe déjà','error');return;}
+  users[uid]={pass,name:'Resp. '+name,role:'specialist',dept:name};
+  document.getElementById('newUid').value='';
+  document.getElementById('newUname').value='';
+  document.getElementById('newUpass').value='';
+  renderUsers(); buildLoginDropdown();
+  showToast('✅ Spécialité "'+name+'" ajoutée','success');
+}
+
+function renderUsers(){
+  const el=document.getElementById('usersList');
+  const specs=Object.entries(users).filter(([,u])=>u.role==='specialist');
+  if(!specs.length){el.innerHTML='<div class="empty"><div class="ei">👥</div><p>Aucune spécialité</p></div>';return;}
+  el.innerHTML=specs.map(([uid,u])=>`
+    <div class="ucard">
+      <div class="ucard-l">
+        <div class="uavatar">${u.dept.charAt(0)}</div>
+        <div>
+          <div style="font-weight:700;font-size:13px">${u.dept}</div>
+          <div style="font-size:11px;color:var(--text2)">@${uid} &nbsp;|&nbsp; ${requests.filter(r=>r.userId===uid).length} demande(s)</div>
+        </div>
+      </div>
+      <div class="ucard-r">
+        <button class="btn btn-sm btn-e" onclick="openEditUser('${uid}')">✏️</button>
+        <button class="btn btn-sm btn-d" onclick="deleteUser('${uid}')">🗑️</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function openEditUser(uid){
+  document.getElementById('editUid').value=uid;
+  document.getElementById('editUname').value=users[uid].dept;
+  document.getElementById('editUpass').value='';
+  document.getElementById('editModal').classList.add('open');
+}
+function saveEditUser(){
+  const uid=document.getElementById('editUid').value;
+  const name=document.getElementById('editUname').value.trim();
+  const pass=document.getElementById('editUpass').value;
+  if(!name){showToast('Entrez le nom','error');return;}
+  users[uid].dept=name; users[uid].name='Resp. '+name;
+  if(pass) users[uid].pass=pass;
+  closeModal('editModal'); renderUsers(); buildLoginDropdown();
+  showToast('✅ Modifications enregistrées','success');
+}
+function deleteUser(uid){
+  if(!confirm('Supprimer la spécialité "'+users[uid].dept+'" ?')) return;
+  delete users[uid];
+  renderUsers(); buildLoginDropdown();
+  showToast('🗑️ Spécialité supprimée','warn');
+}
+function closeModal(id){ document.getElementById(id).classList.remove('open'); }
+
+// ══════════════════════════════════════════════════════
+//  SPECIALIST VIEW
+// ══════════════════════════════════════════════════════
+function renderSpecView(){
+  const myR=requests.filter(r=>r.userId===currentUser.id);
+  const availSlotCount = slots.filter(s=>s.date&&s.booked<s.capacity).length;
+  document.getElementById('specStats').innerHTML=`
+    <div class="sc"><div class="si" style="background:rgba(201,153,58,0.15)">📋</div><div class="sv"><h3>${myR.length}</h3><p>Mes demandes</p></div></div>
+    <div class="sc"><div class="si" style="background:rgba(39,174,96,0.15)">✅</div><div class="sv"><h3>${myR.filter(r=>r.status==='approved').length}</h3><p>Approuvées</p></div></div>
+    <div class="sc"><div class="si" style="background:rgba(230,126,34,0.15)">⏳</div><div class="sv"><h3>${myR.filter(r=>r.status==='pending').length}</h3><p>En attente</p></div></div>
+    <div class="sc"><div class="si" style="background:rgba(41,128,185,0.15)">🏛️</div><div class="sv"><h3>${availSlotCount}</h3><p>Créneaux libres</p></div></div>
+  `;
+  renderMyReqs();
+  renderAvailSlots();
+  const rej=myR.filter(r=>r.status==='rejected');
+  const banner=document.getElementById('notifBanner');
+  if(rej.length){banner.style.display='flex';banner.innerHTML=`⚠️ Vous avez ${rej.length} demande(s) refusée(s) — veuillez soumettre une nouvelle demande.`;}
+  else banner.style.display='none';
+}
+
+function loadModules(){
+  const sem=parseInt(document.getElementById('semSel').value);
+  const sel=document.getElementById('modSel');
+  sel.innerHTML='<option value="">— Choisir le module —</option>';
+  sel.disabled=!sem;
+  if(!sem) return;
+  const uid=currentUser.id;
+  const mods=MODULES[uid]?MODULES[uid][sem]:null;
+  if(!mods||!mods.length){
+    sel.innerHTML='<option value="">Aucun module pour ce semestre</option>';
+    return;
+  }
+  mods.forEach(m=>{
+    const o=document.createElement('option');
+    o.value=m; o.textContent=m;
+    sel.appendChild(o);
+  });
+  sel.disabled=false;
+}
+
+function checkCapWarn(){ /* no-op — rooms assigned automatically */ }
+
+// Auto-assign rooms based on student count and available slots
+function autoAssignRooms(date, time, students) {
+  // Get available slots for requested date/time
+  let available = slots.filter(s => s.date === date && s.time === time && s.booked < s.capacity);
+  // If no slots at that exact time, try same date any time
+  if (!available.length) available = slots.filter(s => s.date === date && s.booked < s.capacity);
+  // If still nothing, try any available slot
+  if (!available.length) available = slots.filter(s => s.date && s.booked < s.capacity);
+  // Sort by capacity descending (biggest rooms first)
+  available.sort((a,b) => (b.capacity-b.booked)-(a.capacity-a.booked));
+
+  const assignedSlots = [];
+  let needed = students;
+  for (const s of available) {
+    if (needed <= 0) break;
+    const avail = s.capacity - s.booked;
+    const take = Math.min(avail, needed);
+    assignedSlots.push({ slot: s, take });
+    needed -= take;
+  }
+  if (needed > 0) return null; // not enough capacity
+  return assignedSlots;
+}
+
+function submitReq(){
+  const sem=parseInt(document.getElementById('semSel').value);
+  const mod=document.getElementById('modSel').value.trim();
+  const students=parseInt(document.getElementById('stuCount').value);
+  const FIXED_TIME = '11:30';
+  const FIXED_DUR  = '1h30';
+
+  // Get selected days
+  const checkedDays = Array.from(document.querySelectorAll('#dayCheckboxes input:checked')).map(cb=>cb.value);
+
+  if(!sem||!mod||!students){showToast('Veuillez remplir tous les champs','error');return;}
+
+  // Check session is open
+  if(!currentSession){showToast('⚠️ Aucune session ouverte — contactez M. ZEKRI Ammar','warn');return;}
+
+  // Find available slot in session week
+  const DAY_NAMES = ['Dimanche','Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi'];
+  const sessionSlots = slots.filter(s => {
+    if(!s.date) return false;
+    const d = new Date(s.date+'T00:00:00');
+    const start = new Date(currentSession.weekStart+'T00:00:00');
+    const end = new Date(currentSession.weekEnd+'T00:00:00');
+    if(d < start || d > end) return false;
+    if(s.booked >= s.capacity) return false;
+    // Filter by preferred days if selected
+    if(checkedDays.length > 0){
+      const dayName = DAY_NAMES[d.getDay()];
+      return checkedDays.includes(dayName);
+    }
+    return true;
+  });
+
+  // Auto-assign rooms by capacity
+  sessionSlots.sort((a,b)=>(b.capacity-b.booked)-(a.capacity-a.booked));
+  const assignment = [];
+  let needed = students;
+  for(const s of sessionSlots){
+    if(needed<=0) break;
+    const avail = s.capacity - s.booked;
+    const take = Math.min(avail, needed);
+    assignment.push({slot:s, take});
+    needed -= take;
+  }
+
+  if(needed>0 || !assignment.length){
+    document.getElementById('capWarn').style.display='flex';
+    document.getElementById('capWarn').innerHTML = checkedDays.length
+      ? `⚠️ Aucune salle disponible les jours sélectionnés (${checkedDays.join(', ')}) — décochez certains jours ou contactez M. ZEKRI Ammar.`
+      : `⚠️ Capacité insuffisante cette semaine — contactez M. ZEKRI Ammar.`;
+    showToast('❌ Capacité insuffisante pour les jours choisis','error');
+    return;
+  }
+  document.getElementById('capWarn').style.display='none';
+
+  // Apply booking
+  assignment.forEach(({slot,take})=>{ slot.booked+=take; });
+
+  const rooms = assignment.map(a=>a.slot.room);
+  const slotIds = assignment.map(a=>a.slot.id);
+  const usedDate = assignment[0].slot.date;
+  const usedDayName = DAY_NAMES[new Date(usedDate+'T00:00:00').getDay()];
+
+  if(rooms.length>1){
+    document.getElementById('multiInfo').style.display='flex';
+    document.getElementById('multiInfo').innerHTML=`ℹ️ Tafwij : ${students} étudiants sur ${rooms.length} salles (${rooms.join(', ')})`;
+  }
+
+  const newReq = {
+    id:reqIdCtr++, userId:currentUser.id, module:mod, semestre:sem,
+    date:usedDate, time:FIXED_TIME, dur:FIXED_DUR, students,
+    room:rooms.join(' + '), rooms, slotIds,
+    sessionId: currentSession.id,
+    preferredDays: checkedDays,
+    status:'pending'
+  };
+  requests.push(newReq);
+  assignment.forEach(({slot})=>dbSaveSlot(slot));
+  lsSave('slots', slots);
+  lsSave('requests', requests);
+  dbSaveRequest(newReq);
+
+  // Reset form
+  document.getElementById('semSel').value='';
+  document.getElementById('modSel').innerHTML='<option>— Choisir le semestre d\'abord —</option>';
+  document.getElementById('modSel').disabled=true;
+  document.getElementById('stuCount').value='';
+  document.getElementById('multiInfo').style.display='none';
+  document.querySelectorAll('#dayCheckboxes input').forEach(cb=>cb.checked=false);
+
+  const daysText = checkedDays.length ? ` — ${usedDayName}` : ` — ${usedDayName}`;
+  showToast(rooms.length>1
+    ?`✅ "${mod}" soumise — Tafwij sur ${rooms.length} salles${daysText}`
+    :`✅ "${mod}" soumise — ${rooms[0]}${daysText}`
+  ,'success');
+  renderSpecView();
+}
+
+function renderMyReqs(){
+  const myR=requests.filter(r=>r.userId===currentUser.id);
+  const el=document.getElementById('myReqs');
+  if(!myR.length){el.innerHTML='<div class="empty"><div class="ei">📭</div><p>Aucune demande pour l\'instant</p></div>';return;}
+  el.innerHTML=myR.slice().reverse().map(r=>`
+    <div style="padding:11px;border:1px solid var(--border);border-radius:10px;margin-bottom:8px;background:rgba(255,255,255,0.02)">
+      <div style="display:flex;justify-content:space-between;margin-bottom:5px;gap:8px;align-items:flex-start">
+        <b style="font-size:13px;flex:1">${r.module}</b>
+        <div style="display:flex;gap:5px;align-items:center;flex-shrink:0">
+          <span class="badge ${r.status==='approved'?'bg':r.status==='rejected'?'br':'bo'}">${r.status==='approved'?'✅ Approuvé':r.status==='rejected'?'❌ Refusé':'⏳ Attente'}</span>
+          ${r.status==='pending'?`<button class="btn btn-sm btn-d" onclick="deleteReq(${r.id},false)" style="padding:3px 8px;font-size:11px">🗑️</button>`:''}
+        </div>
+      </div>
+      <div style="font-size:11px;color:var(--text2)">S${r.semestre} &nbsp;📅 ${r.date||'—'} &nbsp;⏰ ${r.time||'11:30'} &nbsp;🏛️ ${r.room} &nbsp;👥 ${r.students}</div>
+      ${r.preferredDays&&r.preferredDays.length?`<div style="font-size:10px;color:var(--gold2);margin-top:3px">📅 Jours souhaités : ${r.preferredDays.join(', ')}</div>`:''}
+    </div>
+  `).join('');
+}
+
+function renderAvailSlots(){
+  const el=document.getElementById('availSlots');
+  const active=slots.filter(s=>s.date);
+  if(!active.length){el.innerHTML='<div class="empty"><div class="ei">📅</div><p>Aucun créneau disponible — le chef de service n\'a pas encore ouvert de créneaux.</p></div>';return;}
+  el.innerHTML=`<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px">`+
+    active.map(s=>{
+      const pct=Math.min(Math.round((s.booked/s.capacity)*100),100);
+      const full=s.booked>=s.capacity;
+      const col=pct>=100?'#e74c3c':pct>=70?'#e67e22':'#27ae60';
+      return `<div style="padding:14px;border:1px solid ${full?'rgba(231,76,60,0.3)':'var(--border)'};border-radius:11px;background:rgba(255,255,255,0.02)">
+        <div style="font-weight:700;margin-bottom:6px">🏛️ ${s.room}</div>
+        <div style="font-size:12px;color:var(--text2)">📅 ${s.date}<br>⏰ ${s.time} &nbsp;⏱️ ${s.dur||'—'}</div>
+        <div style="font-size:13px;font-weight:700;color:${col};margin-top:8px">👥 ${s.booked}/${s.capacity}</div>
+        <div class="cbar"><div class="cfill" style="width:${pct}%;background:${col}"></div></div>
+        ${full?'<div style="font-size:11px;color:#ff6b6b;margin-top:5px">🔴 Salle pleine</div>':''}
+      </div>`;
+    }).join('')+`</div>`;
+}
+
+// ══════════════════════════════════════════════════════
+//  WEEKLY PROGRAM GENERATOR
+// ══════════════════════════════════════════════════════
+function generateWeekly(){
+  if(!currentSession){
+    document.getElementById('weeklyProg').innerHTML='<div class="empty"><div class="ei">📅</div><p>Ouvrez d\'abord une session pour générer le programme</p></div>';
+    showToast('⚠️ Ouvrez une session d\'abord','warn');
+    return;
+  }
+
+  // Only requests for current session
+  const approved = requests.filter(r =>
+    (r.status==='approved'||r.status==='pending') &&
+    r.sessionId === currentSession.id
+  );
+
+  if(!approved.length){
+    document.getElementById('weeklyProg').innerHTML='<div class="empty"><div class="ei">📝</div><p>Aucune demande pour la session actuelle</p></div>';
+    return;
+  }
+
+  // Reset guard counts for fair rotation
+  guards.forEach(g=>g.count=0);
+
+  // Group by date
+  const byDate={};
+  approved.forEach(r=>{
+    if(!byDate[r.date]) byDate[r.date]=[];
+    byDate[r.date].push(r);
+  });
+
+  const dates=Object.keys(byDate).sort();
+  const DAYS_FR=['Dim','Lun','Mar','Mer','Jeu','Ven','Sam'];
+
+  // Assign guards via rotation
+  const assignGuard=(numRooms)=>{
+    if(!guards.length) return [];
+    const sorted=[...guards].sort((a,b)=>a.count-b.count);
+    const nb = Math.min(Math.max(numRooms,1)*2, guards.length);
+    const assigned=sorted.slice(0,nb);
+    assigned.forEach(g=>{ const real=guards.find(x=>x.id===g.id); if(real) real.count++; });
+    return assigned;
+  };
+
+  const getAnnee=(sem)=>{
+    if(sem<=2) return '1ère Année';
+    if(sem<=4) return '2ème Année';
+    if(sem<=6) return '3ème Année';
+    if(sem<=8) return '4ème Année';
+    return '5ème Année';
+  };
+
+  let html=`<div class="week-scroll"><table class="week-tbl"><thead><tr>
+    <th class="time-hdr">Heure</th>`;
+  dates.forEach(d=>{
+    const dt=new Date(d+'T00:00:00');
+    html+=`<th>${DAYS_FR[dt.getDay()]}<br><small>${formatDate(d)}</small></th>`;
+  });
+  html+=`</tr></thead><tbody><tr><td class="time-hdr" style="font-weight:700;color:var(--gold)">11h30<br>→<br>13h00</td>`;
+
+  dates.forEach(d=>{
+    const exams=byDate[d]||[];
+    if(!exams.length){ html+=`<td><div class="empty-cell">—</div></td>`; }
+    else {
+      html+=`<td>`;
+      exams.forEach(r=>{
+        const u=users[r.userId];
+        const numRooms=r.rooms&&r.rooms.length>0?r.rooms.length:1;
+        const assignedObjs=assignGuard(numRooms);
+        r.assignedGuards=assignedObjs.map(g=>g.id);
+        const gnames=assignedObjs.map(g=>g.name);
+        const annee=getAnnee(r.semestre);
+        const roomList=r.rooms&&r.rooms.length>1?r.rooms.join(' + '):r.room;
+        html+=`<div class="exam-block">
+          <div class="eb-module" style="font-weight:700;color:var(--gold2);font-size:12px;line-height:1.3">${r.module}</div>
+          <div style="font-size:10px;color:var(--text2);margin-top:2px">${annee} — S${r.semestre}</div>
+          <div style="font-size:10px;color:var(--text2)">${u?.dept||''}</div>
+          <div style="font-size:11px;color:#5dade2;margin-top:3px">🏛️ ${roomList}</div>
+          <div style="font-size:11px;color:var(--text2)">👥 ${r.students} étudiant(s)</div>
+          <div style="margin-top:4px;display:flex;flex-wrap:wrap;gap:3px">
+            ${gnames.map(n=>`<span class="guard-chip" style="font-size:10px">👤 ${n}</span>`).join('')}
+          </div>
+        </div>`;
+      });
+      html+=`</td>`;
+    }
+  });
+
+  html+=`</tr></tbody></table></div>`;
+
+  // Summary
+  const guardSummary=guards.filter(g=>g.count>0).map(g=>`${g.name} (${g.count} séance${g.count>1?'s':''})`).join(' &nbsp;|&nbsp; ');
+  html+=`<div style="margin-top:14px;padding:12px 16px;background:var(--gold3);border-radius:10px;border:1px solid var(--border);font-size:12px">
+    <b style="color:var(--gold2)">📋 Session :</b> ${currentSession.label}<br>
+    <b style="color:var(--gold2)">👩‍🏫 Rotation :</b> <span style="color:var(--text2)">${guardSummary||'—'}</span><br>
+    <span style="color:var(--text2)">Généré le ${new Date().toLocaleDateString('fr-FR')} à ${new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})}</span>
+  </div>`;
+
+  document.getElementById('weeklyProg').innerHTML=html;
+  document.getElementById('btnPrint').style.display='inline-block';
+  renderGuardStats();
+  showToast('✅ Programme généré','success');
+}
+
+// ══════════════════════════════════════════════════════
+//  TOAST
+// ══════════════════════════════════════════════════════
+function showToast(msg,type='success'){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.className=`toast ${type} show`;
+  setTimeout(()=>t.classList.remove('show'),3500);
+}
+
+// ══════════════════════════════════════════════════════
+//  PASSWORD MANAGER
+// ══════════════════════════════════════════════════════
+// Store phone numbers separately
+const specPhones = {};
+
+function renderPasswordManager() {
+  // Specialists
+  const specBody = document.getElementById('specPassBody');
+  const specs = Object.entries(users).filter(([,u])=>u.role==='specialist');
+  specBody.innerHTML = specs.map(([uid,u]) => {
+    const hasPass = u.pass && u.pass.length > 0;
+    return `<tr>
+      <td><b>${u.name}</b></td>
+      <td style="font-size:12px;color:var(--text2)">${u.dept}</td>
+      <td>
+        <div style="display:flex;gap:6px;align-items:center">
+          <input type="password" id="sp_${uid}" value="${u.pass||''}"
+            placeholder="Saisir mot de passe"
+            style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.15);border-radius:7px;padding:7px 10px;color:var(--text);font-size:13px;width:160px;outline:none"
+            onfocus="this.type='text'" onblur="this.type='password'" />
+          <button class="btn btn-sm btn-e" onclick="saveSpecPass('${uid}')">💾</button>
+        </div>
+      </td>
+      <td>${hasPass ? '<span class="badge bg">✅ Défini</span>' : '<span class="badge br">❌ Non défini</span>'}</td>
+      <td>
+        <div style="display:flex;gap:5px;align-items:center">
+          <input type="tel" id="phone_spec_${uid}" value="${specPhones[uid]||''}"
+            placeholder="0xxxxxxx"
+            style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.15);border-radius:7px;padding:7px 10px;color:var(--text);font-size:13px;width:120px;outline:none" />
+          <button class="btn btn-sm btn-s" onclick="sendWhatsApp('spec','${uid}')" title="Envoyer via WhatsApp">📱</button>
+        </div>
+      </td>
+    </tr>`;
+  }).join('');
+
+  // Guards
+  const guardBody = document.getElementById('guardPassBody');
+  guardBody.innerHTML = guards.map(g => {
+    const uid = 'guard_'+g.id;
+    const u = users[uid];
+    const hasPass = u && u.pass && u.pass.length > 0;
+    return `<tr>
+      <td><b>${g.name}</b></td>
+      <td>
+        <input type="tel" id="phone_guard_${g.id}" value="${g.phone||''}"
+          placeholder="0xxxxxxx"
+          onchange="guards.find(x=>x.id===${g.id}).phone=this.value"
+          style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.15);border-radius:7px;padding:7px 10px;color:var(--text);font-size:13px;width:120px;outline:none" />
+      </td>
+      <td>
+        <div style="display:flex;gap:6px;align-items:center">
+          <input type="password" id="gp_${g.id}" value="${u?.pass||''}"
+            placeholder="Saisir mot de passe"
+            style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.15);border-radius:7px;padding:7px 10px;color:var(--text);font-size:13px;width:140px;outline:none"
+            onfocus="this.type='text'" onblur="this.type='password'" />
+          <button class="btn btn-sm btn-e" onclick="saveGuardPass(${g.id})">💾</button>
+        </div>
+      </td>
+      <td>${hasPass ? '<span class="badge bg">✅ Défini</span>' : '<span class="badge br">❌ Non défini</span>'}</td>
+      <td>
+        <button class="btn btn-sm btn-s" onclick="sendWhatsApp('guard',${g.id})" title="Envoyer via WhatsApp">📱 WhatsApp</button>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+function saveSpecPass(uid) {
+  const val = document.getElementById('sp_'+uid).value.trim();
+  if (!val) { showToast('Entrez un mot de passe','error'); return; }
+  users[uid].pass = val;
+  const phoneEl = document.getElementById('phone_spec_'+uid);
+  if (phoneEl) { specPhones[uid] = phoneEl.value.trim(); users[uid].phone = phoneEl.value.trim(); }
+  // Save to localStorage
+  const saved = lsLoad('userPass', {});
+  saved[uid] = val;
+  lsSave('userPass', saved);
+  dbSaveUser(uid, users[uid]);
+  renderPasswordManager();
+  showToast('✅ Mot de passe enregistré','success');
+}
+
+function saveGuardPass(gid) {
+  const val = document.getElementById('gp_'+gid).value.trim();
+  if (!val) { showToast('Entrez un mot de passe','error'); return; }
+  const uid = 'guard_'+gid;
+  if (!users[uid]) { showToast('Utilisateur introuvable','error'); return; }
+  users[uid].pass = val;
+  const phoneEl = document.getElementById('phone_guard_'+gid);
+  const g = guards.find(x=>x.id===gid);
+  if (phoneEl && g) {
+    g.phone = phoneEl.value.trim();
+    users[uid].phone = g.phone;
+    const phones = lsLoad('guardPhones', {});
+    phones[gid] = g.phone;
+    lsSave('guardPhones', phones);
+    dbSaveGuard(g);
+  }
+  // Save to localStorage
+  const saved = lsLoad('guardPass', {});
+  saved[uid] = val;
+  lsSave('guardPass', saved);
+  dbSaveUser(uid, users[uid]);
+  renderPasswordManager();
+  showToast('✅ Mot de passe enregistré','success');
+}
+
+function buildWhatsAppMsg(name, dept, pass, isGuard) {
+  const link = 'https://infspm.netlify.app/';
+  if (isGuard) {
+    return `Bonjour ${name},\n\nVous êtes invitée à accéder à la plateforme de gestion des examens de l'INFSPM Biskra.\n\n🔗 Lien : ${link}\n👤 Compte : ${name}\n🔑 Mot de passe : ${pass}\n\nCordialement,\nM. ZEKRI Ammar\nService des Examens & Concours — INFSPM Biskra`;
+  } else {
+    return `Bonjour ${name},\n\nVous êtes invité(e) à accéder à la plateforme de programmation des examens de l'INFSPM Biskra.\n\n🔗 Lien : ${link}\n👤 Spécialité : ${dept}\n🔑 Mot de passe : ${pass}\n\nVeuillez utiliser ce mot de passe pour soumettre vos demandes de programmation d'examens.\n\nCordialement,\nM. ZEKRI Ammar\nService des Examens & Concours — INFSPM Biskra`;
+  }
+}
+
+function sendWhatsApp(type, id) {
+  let name, dept, pass, phone, isGuard = false;
+  if (type === 'spec') {
+    const u = users[id];
+    if (!u || !u.pass) { showToast('Définissez d\'abord le mot de passe','error'); return; }
+    // Save phone before sending
+    const phoneEl = document.getElementById('phone_spec_'+id);
+    phone = phoneEl ? phoneEl.value.trim() : specPhones[id] || '';
+    specPhones[id] = phone;
+    name = u.name; dept = u.dept; pass = u.pass;
+  } else {
+    const gid = parseInt(id);
+    const uid = 'guard_'+gid;
+    const g = guards.find(x=>x.id===gid);
+    const u = users[uid];
+    if (!u || !u.pass) { showToast('Définissez d\'abord le mot de passe','error'); return; }
+    const phoneEl = document.getElementById('phone_guard_'+gid);
+    phone = phoneEl ? phoneEl.value.trim() : g?.phone || '';
+    if (g) g.phone = phone;
+    name = g.name; dept = 'Surveillante'; pass = u.pass; isGuard = true;
+  }
+  if (!phone) { showToast('Entrez le numéro WhatsApp','error'); return; }
+  const msg = buildWhatsAppMsg(name, dept, pass, isGuard);
+  const cleanPhone = phone.replace(/\D/g,'');
+  const url = `https://wa.me/${cleanPhone.startsWith('0') ? '213'+cleanPhone.slice(1) : cleanPhone}?text=${encodeURIComponent(msg)}`;
+  window.open(url, '_blank');
+  showToast('📱 WhatsApp ouvert pour '+name,'success');
+}
+
+function sendAllPasswords() {
+  const specs = Object.entries(users).filter(([,u])=>u.role==='specialist' && u.pass);
+  const grds = guards.filter(g=>{ const u=users['guard_'+g.id]; return u&&u.pass; });
+  if (!specs.length && !grds.length) { showToast('Aucun mot de passe défini','error'); return; }
+  let missing = [];
+  specs.forEach(([uid,u])=>{ if(!(specPhones[uid]||'').trim()) missing.push(u.name); });
+  grds.forEach(g=>{ if(!(g.phone||'').trim()) missing.push(g.name); });
+  if (missing.length) {
+    showToast(`⚠️ Numéros manquants : ${missing.slice(0,3).join(', ')}${missing.length>3?'...':''}`, 'warn');
+    return;
+  }
+  // Open WhatsApp for each one sequentially (browser will open multiple tabs)
+  [...specs.map(([uid])=>({type:'spec',id:uid})),
+   ...grds.map(g=>({type:'guard',id:g.id}))
+  ].forEach((item,i) => {
+    setTimeout(()=>sendWhatsApp(item.type, item.id), i*600);
+  });
+}
+
+// ══════════════════════════════════════════════════════
+//  VIEWER DASHBOARD (read-only)
+// ══════════════════════════════════════════════════════
+function swViewerTab(id, btn) {
+  document.querySelectorAll('#viewerTabs .tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('#viewerView .tc').forEach(t=>t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+}
+
+// ══════════════════════════════════════════════════════
+//  VIEWER DASHBOARD (read-only)
+// ══════════════════════════════════════════════════════
+function renderViewerDash() {
+  const total = requests.length;
+  const approved = requests.filter(r=>r.status==='approved').length;
+  const pending = requests.filter(r=>r.status==='pending').length;
+  const activeSlots = slots.filter(s=>s.date&&s.booked<s.capacity).length;
+  const totalSpecs = Object.values(users).filter(u=>u.role==='specialist').length;
+
+  document.getElementById('viewerStats').innerHTML = `
+    <div class="sc"><div class="si" style="background:rgba(201,153,58,0.15)">🎓</div><div class="sv"><h3>${totalSpecs}</h3><p>Spécialités</p></div></div>
+    <div class="sc"><div class="si" style="background:rgba(201,153,58,0.15)">📋</div><div class="sv"><h3>${total}</h3><p>Total demandes</p></div></div>
+    <div class="sc"><div class="si" style="background:rgba(39,174,96,0.15)">✅</div><div class="sv"><h3>${approved}</h3><p>Approuvées</p></div></div>
+    <div class="sc"><div class="si" style="background:rgba(230,126,34,0.15)">⏳</div><div class="sv"><h3>${pending}</h3><p>En attente</p></div></div>
+    <div class="sc"><div class="si" style="background:rgba(41,128,185,0.15)">🏛️</div><div class="sv"><h3>${activeSlots}</h3><p>Créneaux libres</p></div></div>
+    <div class="sc"><div class="si" style="background:rgba(39,174,96,0.15)">👩‍🏫</div><div class="sv"><h3>${guards.length}</h3><p>Surveillantes</p></div></div>
+  `;
+
+  // Requests table
+  const tb = document.getElementById('viewerReqBody');
+  if(!requests.length) {
+    tb.innerHTML = '<tr><td colspan="8" style="text-align:center;color:var(--text2);padding:28px">Aucune demande pour l\'instant</td></tr>';
+  } else {
+    tb.innerHTML = requests.slice().reverse().map(r => {
+      const u = users[r.userId];
+      return `<tr>
+        <td><b>${u?.dept||r.userId}</b></td>
+        <td style="font-size:12px;max-width:180px;white-space:normal">${r.module}</td>
+        <td>S${r.semestre}</td>
+        <td>${r.date||'—'}</td>
+        <td>${r.time||'11:30'}</td>
+        <td>${r.students}</td>
+        <td style="font-size:12px">${r.room||'—'}</td>
+        <td><span class="badge ${r.status==='approved'?'bg':r.status==='rejected'?'br':'bo'}">${r.status==='approved'?'✅ Approuvé':r.status==='rejected'?'❌ Refusé':'⏳ Attente'}</span></td>
+      </tr>`;
+    }).join('');
+  }
+
+  // Specialties & Modules
+  const modEl = document.getElementById('viewerModules');
+  modEl.innerHTML = Object.entries(MODULES).map(([uid, data]) => {
+    const u = users[uid];
+    const specName = u ? u.dept : data.name;
+    const respName = u ? u.name : '—';
+    return `<div style="margin-bottom:18px;border:1px solid var(--border);border-radius:12px;overflow:hidden">
+      <div style="background:var(--gold3);padding:12px 16px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
+        <div>
+          <b style="color:var(--gold2);font-size:14px">🎓 ${specName}</b>
+          <div style="font-size:12px;color:var(--text2);margin-top:2px">👤 ${respName}</div>
+        </div>
+        <span class="badge bb">${Object.values([1,2,3,4,5,6]).reduce((a,s)=>a+(data[s]?data[s].length:0),0)} modules</span>
+      </div>
+      <div style="padding:12px 16px">
+        ${[1,2,3,4,5,6].map(sem => {
+          const mods = data[sem];
+          if(!mods||!mods.length) return '';
+          const annee = sem<=2?'1ère Année':sem<=4?'2ème Année':'3ème Année';
+          return `<div style="margin-bottom:12px">
+            <div style="font-size:12px;font-weight:700;color:var(--gold2);margin-bottom:6px">
+              Semestre ${sem} — <span style="color:var(--text2);font-weight:400">${annee}</span>
+            </div>
+            <div style="display:flex;flex-wrap:wrap;gap:5px">
+              ${mods.map(m=>`<span style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:6px;padding:3px 8px;font-size:11px;color:var(--text)">${m}</span>`).join('')}
+            </div>
+          </div>`;
+        }).join('')}
+      </div>
+    </div>`;
+  }).join('');
+
+  // Slots
+  const slotsEl = document.getElementById('viewerSlots');
+  const activeS = slots.filter(s=>s.date);
+  if(!activeS.length) {
+    slotsEl.innerHTML = '<div class="empty"><div class="ei">📅</div><p>Aucun créneau programmé</p></div>';
+  } else {
+    slotsEl.innerHTML = activeS.map(s => {
+      const pct = Math.min(Math.round((s.booked/s.capacity)*100),100);
+      const col = pct>=100?'#e74c3c':pct>=70?'#e67e22':'#27ae60';
+      return `<div style="padding:10px 13px;border:1px solid var(--border);border-radius:9px;margin-bottom:8px;background:rgba(255,255,255,0.02)">
+        <div style="display:flex;justify-content:space-between">
+          <b style="font-size:13px">🏛️ ${s.room}</b>
+          <span style="font-size:12px;color:${col}">👥 ${s.booked}/${s.capacity}</span>
+        </div>
+        <div style="font-size:11px;color:var(--text2)">📅 ${s.date} &nbsp;⏰ ${s.time}</div>
+        <div class="cbar"><div class="cfill" style="width:${pct}%;background:${col}"></div></div>
+      </div>`;
+    }).join('');
+  }
+
+  // Guards
+  const guardsEl = document.getElementById('viewerGuards');
+  guardsEl.innerHTML = guards.map((g,i) => `
+    <div style="padding:9px 13px;border:1px solid var(--border);border-radius:9px;margin-bottom:7px;background:rgba(255,255,255,0.02);display:flex;align-items:center;gap:10px">
+      <div style="width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,var(--bg3),var(--gold));display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:var(--gold2);flex-shrink:0">${i+1}</div>
+      <div><div style="font-size:13px;font-weight:600">${g.name}</div><div style="font-size:11px;color:var(--text2)">${g.count} séance(s) assignée(s)</div></div>
+    </div>
+  `).join('');
+}
+
+// ══════════════════════════════════════════════════════
+//  GUARD VIEW
+// ══════════════════════════════════════════════════════
+function getGuardSessions(guardId) {
+  // Find sessions from weekly program (approved/pending requests where this guard is assigned)
+  // We use the guard assignment from requests
+  return requests.filter(r => r.assignedGuards && r.assignedGuards.includes(guardId));
+}
+
+function renderGuardView() {
+  const g = guards.find(x => x.id === currentUser.guardId);
+  if (!g) return;
+  const mySessions = getGuardSessions(g.id);
+  const pendingSwaps = swapRequests.filter(s => s.toGuardId === g.id && s.status === 'pending_colleague').length;
+
+  document.getElementById('guardStats2').innerHTML = `
+    <div class="sc"><div class="si" style="background:rgba(201,153,58,0.15)">📋</div><div class="sv"><h3>${mySessions.length}</h3><p>Mes séances</p></div></div>
+    <div class="sc"><div class="si" style="background:rgba(230,126,34,0.15)">🔄</div><div class="sv"><h3>${swapRequests.filter(s=>s.fromGuardId===g.id).length}</h3><p>Échanges demandés</p></div></div>
+    <div class="sc"><div class="si" style="background:rgba(39,174,96,0.15)">📬</div><div class="sv"><h3>${pendingSwaps}</h3><p>Demandes reçues</p></div></div>
+  `;
+
+  // My sessions
+  const msEl = document.getElementById('myGuardSessions');
+  if (!mySessions.length) {
+    msEl.innerHTML = '<div class="empty"><div class="ei">📋</div><p>Aucune séance assignée pour l\'instant</p></div>';
+  } else {
+    msEl.innerHTML = mySessions.map(r => `
+      <div style="padding:12px;border:1px solid var(--border);border-radius:10px;margin-bottom:8px;background:rgba(255,255,255,0.02)">
+        <div style="font-weight:700;font-size:13px;margin-bottom:4px">📝 ${r.module}</div>
+        <div style="font-size:12px;color:var(--text2)">📅 ${r.date} &nbsp;⏰ ${r.time} &nbsp;🏛️ ${r.room}</div>
+        <div style="font-size:11px;color:var(--gold2);margin-top:3px">${users[r.userId]?.dept||''}</div>
+      </div>
+    `).join('');
+  }
+
+  // Populate swap selects
+  const mySel = document.getElementById('mySessionSel');
+  mySel.innerHTML = '<option value="">— Choisir ma séance —</option>';
+  mySessions.forEach(r => {
+    const o = document.createElement('option');
+    o.value = r.id;
+    o.textContent = `${r.date} | ${r.time} | ${r.room} — ${r.module.substring(0,30)}`;
+    mySel.appendChild(o);
+  });
+
+  const withSel = document.getElementById('swapWithSel');
+  withSel.innerHTML = '<option value="">— Choisir la collègue —</option>';
+  guards.filter(x => x.id !== g.id).forEach(og => {
+    const o = document.createElement('option');
+    o.value = og.id;
+    o.textContent = og.name;
+    withSel.appendChild(o);
+  });
+
+  renderIncomingSwaps(g.id);
+  renderSentSwaps(g.id);
+}
+
+document.addEventListener('change', e => {
+  if (e.target.id === 'swapWithSel') {
+    const gid = parseInt(e.target.value);
+    const herSel = document.getElementById('herSessionSel');
+    herSel.innerHTML = '<option value="">— Choisir sa séance —</option>';
+    herSel.disabled = !gid;
+    if (!gid) return;
+    const herSessions = getGuardSessions(gid);
+    if (!herSessions.length) {
+      herSel.innerHTML = '<option value="">Aucune séance assignée</option>';
+      return;
+    }
+    herSessions.forEach(r => {
+      const o = document.createElement('option');
+      o.value = r.id;
+      o.textContent = `${r.date} | ${r.time} | ${r.room} — ${r.module.substring(0,25)}`;
+      herSel.appendChild(o);
+    });
+  }
+});
+
+function submitSwap() {
+  const g = guards.find(x => x.id === currentUser.guardId);
+  const mySessionId = parseInt(document.getElementById('mySessionSel').value);
+  const toGuardId = parseInt(document.getElementById('swapWithSel').value);
+  const herSessionId = parseInt(document.getElementById('herSessionSel').value);
+  const reason = document.getElementById('swapReason').value.trim();
+  if (!mySessionId || !toGuardId || !herSessionId) { showToast('Veuillez remplir tous les champs','error'); return; }
+  const toGuard = guards.find(x => x.id === toGuardId);
+  const mySession = requests.find(r => r.id === mySessionId);
+  const herSession = requests.find(r => r.id === herSessionId);
+  const newSwap = {
+    id: swapIdCtr++,
+    fromGuardId: g.id, fromGuardName: g.name,
+    toGuardId, toGuardName: toGuard.name,
+    mySessionId, mySession: `${mySession.date} | ${mySession.time} | ${mySession.room}`,
+    herSessionId, herSession: `${herSession.date} | ${herSession.time} | ${herSession.room}`,
+    module1: mySession.module, module2: herSession.module,
+    reason, status: 'pending_colleague',
+    createdAt: new Date().toLocaleDateString('fr-FR')
+  };
+  swapRequests.push(newSwap);
+  lsSave('swaps', swapRequests);
+  dbSaveSwap(newSwap);
+  document.getElementById('mySessionSel').value = '';
+  document.getElementById('swapWithSel').value = '';
+  document.getElementById('herSessionSel').innerHTML = '<option>— Choisir la collègue d\'abord —</option>';
+  document.getElementById('herSessionSel').disabled = true;
+  document.getElementById('swapReason').value = '';
+  showToast(`✅ Demande envoyée à ${toGuard.name}`, 'success');
+  renderGuardView();
+}
+
+function renderIncomingSwaps(gid) {
+  const el = document.getElementById('incomingSwaps');
+  const incoming = swapRequests.filter(s => s.toGuardId === gid && s.status === 'pending_colleague');
+  if (!incoming.length) { el.innerHTML = '<div class="empty"><div class="ei">📬</div><p>Aucune demande reçue</p></div>'; return; }
+  el.innerHTML = incoming.map(s => `
+    <div style="padding:14px;border:1px solid rgba(230,126,34,0.3);border-radius:11px;margin-bottom:10px;background:rgba(230,126,34,0.05)">
+      <div style="font-weight:700;margin-bottom:6px">🔄 Demande de <b>${s.fromGuardName}</b></div>
+      <div style="font-size:12px;color:var(--text2);margin-bottom:8px">
+        Elle souhaite prendre votre séance : <b style="color:var(--gold2)">${s.herSession}</b><br>
+        En échange de sa séance : <b style="color:#5dade2">${s.mySession}</b><br>
+        ${s.reason?`Motif : <i>${s.reason}</i>`:''}
+      </div>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-sm btn-s" onclick="respondSwap(${s.id},'accepted')">✅ Accepter</button>
+        <button class="btn btn-sm btn-d" onclick="respondSwap(${s.id},'refused_colleague')">❌ Refuser</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderSentSwaps(gid) {
+  const el = document.getElementById('sentSwaps');
+  const sent = swapRequests.filter(s => s.fromGuardId === gid);
+  if (!sent.length) { el.innerHTML = '<div class="empty"><div class="ei">📤</div><p>Aucune demande envoyée</p></div>'; return; }
+  el.innerHTML = sent.map(s => {
+    const stBadge = s.status==='pending_colleague'?'<span class="badge bo">⏳ En attente de la collègue</span>':
+                    s.status==='accepted'?'<span class="badge bo">✅ Acceptée — en attente chef</span>':
+                    s.status==='approved'?'<span class="badge bg">✅ Approuvé</span>':
+                    s.status==='refused_colleague'?'<span class="badge br">❌ Refusée par la collègue</span>':
+                    '<span class="badge br">❌ Refusé par le chef</span>';
+    return `<div style="padding:12px;border:1px solid var(--border);border-radius:10px;margin-bottom:8px;background:rgba(255,255,255,0.02)">
+      <div style="display:flex;justify-content:space-between;margin-bottom:5px">${stBadge}<small style="color:var(--text2)">${s.createdAt}</small></div>
+      <div style="font-size:12px;color:var(--text2)">
+        Avec : <b>${s.toGuardName}</b><br>
+        Ma séance : ${s.mySession} &nbsp;↔️&nbsp; Sa séance : ${s.herSession}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function respondSwap(id, response) {
+  const s = swapRequests.find(x => x.id === id);
+  if (!s) return;
+  s.status = response;
+  s._saved = true;
+  lsSave('swaps', swapRequests);
+  dbSaveSwap(s);
+  if (response === 'refused_colleague') {
+    showToast('Demande refusée', 'warn');
+  } else {
+    showToast('✅ Acceptée — en attente de validation du chef de service', 'success');
+  }
+  renderGuardView();
+}
+
+// ── ADMIN SWAPS ──
+function renderAdminSwaps() {
+  const el = document.getElementById('adminSwapsList');
+  const pending = swapRequests.filter(s => s.status === 'accepted');
+  const all = swapRequests.filter(s => ['approved','rejected_admin'].includes(s.status));
+  if (!swapRequests.length) { el.innerHTML = '<div class="empty"><div class="ei">🔄</div><p>Aucune demande d\'échange</p></div>'; return; }
+  let html = '';
+  if (pending.length) {
+    html += `<div class="sec" style="margin-bottom:12px">⏳ En attente de votre validation (${pending.length})</div>`;
+    html += pending.map(s => `
+      <div style="padding:14px;border:1px solid rgba(201,153,58,0.4);border-radius:12px;margin-bottom:10px;background:rgba(201,153,58,0.05)">
+        <div style="display:flex;justify-content:space-between;margin-bottom:8px">
+          <b>🔄 Échange de surveillance</b><small style="color:var(--text2)">${s.createdAt}</small>
+        </div>
+        <div style="font-size:13px;margin-bottom:10px">
+          <b>${s.fromGuardName}</b> ↔️ <b>${s.toGuardName}</b><br>
+          <span style="color:var(--text2);font-size:12px">
+            Séance 1 : ${s.mySession} — ${s.module1}<br>
+            Séance 2 : ${s.herSession} — ${s.module2}<br>
+            ${s.reason?`Motif : <i>${s.reason}</i>`:''}
+          </span>
+        </div>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-sm btn-s" onclick="adminRespondSwap(${s.id},'approved')">✅ Approuver l'échange</button>
+          <button class="btn btn-sm btn-d" onclick="adminRespondSwap(${s.id},'rejected_admin')">❌ Refuser</button>
+        </div>
+      </div>
+    `).join('');
+  }
+  if (all.length) {
+    html += `<div class="sec" style="margin:16px 0 12px">📋 Historique</div>`;
+    html += all.map(s => `
+      <div style="padding:12px;border:1px solid var(--border);border-radius:10px;margin-bottom:8px;background:rgba(255,255,255,0.02)">
+        <div style="display:flex;justify-content:space-between">
+          <span><b>${s.fromGuardName}</b> ↔️ <b>${s.toGuardName}</b></span>
+          <span class="badge ${s.status==='approved'?'bg':'br'}">${s.status==='approved'?'✅ Approuvé':'❌ Refusé'}</span>
+        </div>
+        <div style="font-size:11px;color:var(--text2);margin-top:4px">${s.mySession} ↔️ ${s.herSession}</div>
+      </div>
+    `).join('');
+  }
+  el.innerHTML = html;
+}
+
+function adminRespondSwap(id, decision) {
+  const s = swapRequests.find(x => x.id === id);
+  if (!s) return;
+  s.status = decision;
+  s._saved = true;
+  lsSave('swaps', swapRequests);
+  dbSaveSwap(s);
+  if (decision === 'approved') {
+    const r1 = requests.find(r => r.id === s.mySessionId);
+    const r2 = requests.find(r => r.id === s.herSessionId);
+    if (r1 && r2) {
+      const idx1 = r1.assignedGuards ? r1.assignedGuards.indexOf(s.fromGuardId) : -1;
+      const idx2 = r2.assignedGuards ? r2.assignedGuards.indexOf(s.toGuardId) : -1;
+      if (idx1 > -1) r1.assignedGuards[idx1] = s.toGuardId;
+      if (idx2 > -1) r2.assignedGuards[idx2] = s.fromGuardId;
+      r1._saved = true; r2._saved = true;
+      dbSaveRequest(r1); dbSaveRequest(r2);
+    }
+    showToast('✅ Échange approuvé et effectué', 'success');
+  } else {
+    showToast('❌ Échange refusé', 'warn');
+  }
+  renderAdminSwaps();
+  renderAdminDash();
+}
+
+// Also update generateWeekly to store assignedGuards in requests
+
+// ══════════════════════════════════════════════════════
+//  SESSION MANAGEMENT (Weekly cycles)
+// ══════════════════════════════════════════════════════
+let currentSession = null;
+let sessions = [];
+let sessionIdCtr = 1;
+
+function getWeekDates(offsetWeeks = 1) {
+  const today = new Date();
+  // Next week monday
+  const day = today.getDay();
+  const diff = (day === 0 ? 1 : 8 - day) + (offsetWeeks - 1) * 7;
+  const monday = new Date(today);
+  monday.setDate(today.getDate() + diff);
+  const friday = new Date(monday);
+  friday.setDate(monday.getDate() + 4);
+  const fmt = d => d.toISOString().split('T')[0];
+  return { start: fmt(monday), end: fmt(friday) };
+}
+
+function openNewSession() {
+  if (currentSession && currentSession.status === 'open') {
+    if (!confirm('Une session est déjà ouverte. Voulez-vous la clôturer et en ouvrir une nouvelle ?')) return;
+    closeCurrentSession(false);
+  }
+  const week = getWeekDates(1);
+  currentSession = {
+    id: sessionIdCtr++,
+    weekStart: week.start,
+    weekEnd: week.end,
+    label: `Semaine du ${formatDate(week.start)} au ${formatDate(week.end)}`,
+    status: 'open',
+    openedAt: new Date().toISOString(),
+    requestIds: []
+  };
+  sessions.push(currentSession);
+  lsSave('sessions', sessions);
+  lsSave('currentSession', currentSession);
+  updateSessionBar();
+  showToast(`✅ Session ouverte : ${currentSession.label}`, 'success');
+  // Auto-create slots for the week at fixed time
+  autoCreateWeekSlots(week.start, week.end);
+}
+
+function autoCreateWeekSlots(startDate, endDate) {
+  const FIXED_TIME = '11:30';
+  const FIXED_DUR = '1h30';
+  // Days: Mon-Fri
+  const d = new Date(startDate);
+  const end = new Date(endDate);
+  // Get all rooms
+  const ROOMS_DEF = [
+    {room:'Salle 01',capacity:50},{room:'Salle 02',capacity:50},{room:'Salle 03',capacity:100},
+    {room:'Salle 04',capacity:50},{room:'Salle 05',capacity:50},{room:'Salle 06',capacity:50},
+    {room:'Salle 07',capacity:50},{room:'Salle 08',capacity:50},{room:'Salle 09',capacity:50},
+    {room:'Salle 10',capacity:50},{room:'Salle 11',capacity:50},{room:'Salle 12',capacity:50},
+    {room:'Salle 13 (CDR)',capacity:100},{room:'Salle 14',capacity:30},{room:'Salle 15',capacity:30},
+    {room:'Amphithéâtre',capacity:50},{room:'Grande Salle',capacity:120},{room:'Salle Polyvalente',capacity:50}
+  ];
+  while(d <= end) {
+    const dayOfWeek = d.getDay();
+    if(dayOfWeek !== 0 && dayOfWeek !== 6) { // Skip weekends
+      const dateStr = d.toISOString().split('T')[0];
+      // Check if slots already exist for this date
+      const existing = slots.filter(s=>s.date===dateStr);
+      if(!existing.length) {
+        ROOMS_DEF.forEach(r => {
+          const newSlot = {id:slotIdCtr++, room:r.room, capacity:r.capacity, date:dateStr, time:FIXED_TIME, dur:FIXED_DUR, booked:0};
+          slots.push(newSlot);
+          dbSaveSlot(newSlot);
+        });
+      }
+    }
+    d.setDate(d.getDate()+1);
+  }
+  lsSave('slots', slots);
+  showToast(`🏛️ Créneaux créés automatiquement pour la semaine (11h30–13h00)`, 'success');
+}
+
+function closeCurrentSession(askConfirm = true) {
+  if(!currentSession) return;
+  if(askConfirm && !confirm('Confirmer la clôture de cette session ? Les demandes seront archivées.')) return;
+  currentSession.status = 'closed';
+  currentSession.closedAt = new Date().toISOString();
+  // Archive session requests
+  const sessionReqs = requests.filter(r => r.sessionId === currentSession.id);
+  currentSession.requestIds = sessionReqs.map(r => r.id);
+  // Update in sessions list
+  const idx = sessions.findIndex(s => s.id === currentSession.id);
+  if(idx > -1) sessions[idx] = currentSession;
+  lsSave('sessions', sessions);
+  currentSession = null;
+  lsSave('currentSession', null);
+  updateSessionBar();
+  renderArchive();
+  showToast('✅ Session clôturée et archivée', 'success');
+}
+
+function printAndClose() {
+  window.print();
+  setTimeout(() => {
+    if(confirm('Le programme a été imprimé. Voulez-vous clôturer cette session et ouvrir la suivante ?')) {
+      closeCurrentSession(false);
+    }
+  }, 500);
+}
+
+function updateSessionBar() {
+  const label = document.getElementById('sessionLabel');
+  const status = document.getElementById('sessionStatus');
+  const btnOpen = document.getElementById('btnOpenSession');
+  const btnPrint = document.getElementById('btnPrint');
+  const printInfo = document.getElementById('printSessionInfo');
+
+  if(currentSession && currentSession.status === 'open') {
+    label.textContent = currentSession.label;
+    label.style.color = 'var(--green)';
+    status.textContent = '🟢 Ouverte';
+    status.className = 'badge bg';
+    btnOpen.textContent = '🔄 Nouvelle session';
+    btnPrint.style.display = 'inline-block';
+    if(printInfo) printInfo.textContent = currentSession.label;
+  } else {
+    label.textContent = 'Aucune session ouverte';
+    label.style.color = 'var(--text2)';
+    status.textContent = '⏸️ Fermée';
+    status.className = 'badge br';
+    btnOpen.textContent = '➕ Ouvrir session';
+    btnPrint.style.display = 'none';
+    if(printInfo) printInfo.textContent = '';
+  }
+  renderArchive();
+}
+
+function renderArchive() {
+  const closed = sessions.filter(s => s.status === 'closed');
+  const panel = document.getElementById('archivePanel');
+  const list = document.getElementById('archiveList');
+  if(!closed.length){ panel.style.display='none'; return; }
+  panel.style.display='block';
+  list.innerHTML = closed.slice().reverse().map(s => {
+    const reqs = requests.filter(r => s.requestIds && s.requestIds.includes(r.id));
+    return `<div style="padding:12px;border:1px solid var(--border);border-radius:10px;margin-bottom:8px;background:rgba(255,255,255,0.02)">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <b style="font-size:13px">📁 ${s.label}</b>
+        <span class="badge br">✅ Clôturée</span>
+      </div>
+      <div style="font-size:12px;color:var(--text2);margin-top:4px">${reqs.length} examen(s) programmé(s)</div>
+    </div>`;
+  }).join('');
+}
+
+function formatDate(dateStr) {
+  if(!dateStr) return '';
+  const d = new Date(dateStr);
+  return d.toLocaleDateString('fr-FR', {day:'2-digit', month:'2-digit', year:'numeric'});
+}
+
+function loadSessions() {
+  const saved = lsLoad('sessions', []);
+  if(saved.length) { sessions = saved; sessionIdCtr = Math.max(...sessions.map(s=>s.id), 0)+1; }
+  const savedCurrent = lsLoad('currentSession', null);
+  if(savedCurrent && savedCurrent.status === 'open') currentSession = savedCurrent;
+  updateSessionBar();
+}
+
+// ══════════════════════════════════════════════════════
+//  INIT — Start with Supabase
+// ══════════════════════════════════════════════════════
+// First build dropdown from local data, then load from DB
+buildLoginDropdown();
+loadSessions();
+// Clear old demo localStorage data
+try {
+  const oldReqs = localStorage.getItem('infspm_requests');
+  if(oldReqs){
+    const parsed = JSON.parse(oldReqs);
+    // If requests have no sessionId they are demo — clear them
+    const hasDemo = parsed.some(r=>!r.sessionId);
+    if(hasDemo){ localStorage.removeItem('infspm_requests'); }
+  }
+  localStorage.removeItem('infspm_slots'); // always reload slots from DB
+} catch(e){}
+// Start DB connection
+initDB();
+</script>
+</body>
+</html>
