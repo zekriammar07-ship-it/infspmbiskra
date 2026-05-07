@@ -458,6 +458,42 @@ tr:hover td{background:rgba(255,255,255,0.02)}
           <div class="sec">🔄 Demandes d'échange de surveillance</div>
           <div id="adminSwapsList"><div class="empty"><div class="ei">🔄</div><p>Aucune demande d'échange</p></div></div>
         </div>
+        <!-- Compensation invitation -->
+        <div class="panel" style="margin-top:16px">
+          <div class="sec">🎁 Envoyer une invitation de compensation</div>
+          <div class="abox ai">ℹ️ Après épuisement de toutes les demandes d'échange refusées — invitez une surveillante libre à remplacer une collègue en lui offrant 2 repos consécutifs les 2 semaines suivantes.</div>
+          <div class="g2">
+            <div>
+              <div class="field"><label>Surveillante à remplacer (demandeuse)</label>
+                <select id="compFromGuard"><option value="">— Choisir —</option></select>
+              </div>
+              <div class="field"><label>Sa séance à couvrir</label>
+                <select id="compSession" disabled><option value="">— Choisir la surveillante d'abord —</option></select>
+              </div>
+            </div>
+            <div>
+              <div class="field"><label>Surveillante libre invitée</label>
+                <select id="compToGuard"><option value="">— Choisir une surveillante libre —</option></select>
+              </div>
+              <div class="field"><label>Compensation offerte</label>
+                <select id="compOffer">
+                  <option value="2_weeks_off">2 repos consécutifs (semaines suivantes)</option>
+                  <option value="1_week_off">1 repos (semaine suivante)</option>
+                  <option value="3_weeks_off">3 repos consécutifs</option>
+                </select>
+              </div>
+              <div class="field"><label>Message personnalisé (facultatif)</label>
+                <input id="compMessage" placeholder="ex: Merci de votre disponibilité..." />
+              </div>
+            </div>
+          </div>
+          <button class="btn btn-p" style="margin-top:8px" onclick="sendCompensation()">📤 Envoyer l'invitation de compensation</button>
+        </div>
+        <!-- Compensation history -->
+        <div class="panel" style="margin-top:16px">
+          <div class="sec">📋 Historique des compensations</div>
+          <div id="compHistory"><div class="empty"><div class="ei">📋</div><p>Aucune compensation envoyée</p></div></div>
+        </div>
       </div>
 
       <!-- Passwords Management -->
@@ -586,6 +622,11 @@ tr:hover td{background:rgba(255,255,255,0.02)}
       <div class="panel" style="margin-top:16px">
         <div class="sec">📤 Mes demandes envoyées</div>
         <div id="sentSwaps"><div class="empty"><div class="ei">📤</div><p>Aucune demande envoyée</p></div></div>
+      </div>
+      <!-- Compensation invitations received -->
+      <div class="panel" style="margin-top:16px">
+        <div class="sec">🎁 Invitations de compensation reçues</div>
+        <div id="compensationIncoming"><div class="empty"><div class="ei">🎁</div><p>Aucune invitation de compensation</p></div></div>
       </div>
     </div>
 
@@ -1377,6 +1418,7 @@ function renderAdminDash() {
     <div class="sc"><div class="si" style="background:rgba(231,76,60,0.15)">❌</div><div class="sv"><h3>${rejected}</h3><p>Refusées</p></div></div>
     <div class="sc"><div class="si" style="background:rgba(39,174,96,0.15)">👨‍🏫</div><div class="sv"><h3>${guards.length}</h3><p>Surveillants</p></div></div>
     <div class="sc"><div class="si" style="background:rgba(230,126,34,0.15)">🔄</div><div class="sv"><h3>${swapRequests.filter(s=>s.status==='accepted').length}</h3><p>Échanges à valider</p></div></div>
+    <div class="sc"><div class="si" style="background:rgba(201,153,58,0.15)">🎁</div><div class="sv"><h3>${compensations.filter(c=>c.status==='pending_compensation').length}</h3><p>Compensations en attente</p></div></div>
   `;
   const tb = document.getElementById('dashBody');
   if(!requests.length){ tb.innerHTML='<tr><td colspan="9" style="text-align:center;color:var(--text2);padding:28px">Aucune demande pour l\'instant</td></tr>'; return; }
@@ -2232,6 +2274,232 @@ function renderViewerDash() {
 }
 
 // ══════════════════════════════════════════════════════
+//  COMPENSATION SYSTEM
+// ══════════════════════════════════════════════════════
+let compensations = [];
+let compIdCtr = 1;
+
+function renderAdminSwaps() {
+  // Populate compensation selects
+  const fromSel = document.getElementById('compFromGuard');
+  const toSel = document.getElementById('compToGuard');
+  if(fromSel) {
+    fromSel.innerHTML = '<option value="">— Choisir —</option>';
+    guards.forEach(g => {
+      const o = document.createElement('option');
+      o.value = g.id; o.textContent = g.name;
+      fromSel.appendChild(o);
+    });
+    fromSel.onchange = () => {
+      const gid = parseInt(fromSel.value);
+      const sessSel = document.getElementById('compSession');
+      sessSel.innerHTML = '<option value="">— Choisir la séance —</option>';
+      sessSel.disabled = !gid;
+      if(!gid) return;
+      const sessions = getGuardSessions(gid);
+      sessions.forEach(r => {
+        const o = document.createElement('option');
+        o.value = r.id;
+        o.textContent = `${r.date} | ${r.time} | ${r.room} — ${r.module.substring(0,25)}`;
+        sessSel.appendChild(o);
+      });
+      sessSel.disabled = false;
+      // Populate free guards (not assigned this session)
+      const freeSel = document.getElementById('compToGuard');
+      freeSel.innerHTML = '<option value="">— Choisir une surveillante libre —</option>';
+      const busyIds = new Set(requests.filter(r=>r.assignedGuards).flatMap(r=>r.assignedGuards||[]));
+      guards.filter(g2 => g2.id !== gid && !busyIds.has(g2.id)).forEach(g2 => {
+        const o = document.createElement('option');
+        o.value = g2.id; o.textContent = g2.name + ' (libre)';
+        freeSel.appendChild(o);
+      });
+      // Also add busy ones with indicator
+      guards.filter(g2 => g2.id !== gid && busyIds.has(g2.id)).forEach(g2 => {
+        const o = document.createElement('option');
+        o.value = g2.id; o.textContent = g2.name + ' (programmée)';
+        freeSel.appendChild(o);
+      });
+    };
+  }
+
+  // Render swap requests
+  const el = document.getElementById('adminSwapsList');
+  const pending = swapRequests.filter(s => s.status === 'accepted');
+  const all = swapRequests.filter(s => ['approved','rejected_admin'].includes(s.status));
+  if (!swapRequests.length) { el.innerHTML = '<div class="empty"><div class="ei">🔄</div><p>Aucune demande d\'échange</p></div>'; }
+  else {
+    let html = '';
+    if (pending.length) {
+      html += `<div style="font-weight:700;color:var(--gold2);margin-bottom:10px">⏳ En attente de votre validation (${pending.length})</div>`;
+      html += pending.map(s => `
+        <div style="padding:14px;border:1px solid rgba(201,153,58,0.4);border-radius:12px;margin-bottom:10px;background:rgba(201,153,58,0.05)">
+          <div style="display:flex;justify-content:space-between;margin-bottom:8px">
+            <b>🔄 ${s.fromGuardName} ↔️ ${s.toGuardName}</b><small style="color:var(--text2)">${s.createdAt}</small>
+          </div>
+          <div style="font-size:12px;color:var(--text2);margin-bottom:10px">
+            Séance 1 : ${s.mySession} — ${s.module1}<br>
+            Séance 2 : ${s.herSession} — ${s.module2}<br>
+            ${s.reason?`Motif : <i>${s.reason}</i>`:''}
+          </div>
+          <div style="display:flex;gap:8px">
+            <button class="btn btn-sm btn-s" onclick="adminRespondSwap(${s.id},'approved')">✅ Approuver</button>
+            <button class="btn btn-sm btn-d" onclick="adminRespondSwap(${s.id},'rejected_admin')">❌ Refuser</button>
+          </div>
+        </div>`).join('');
+    }
+    if (all.length) {
+      html += `<div style="font-weight:700;margin:16px 0 10px">📋 Historique</div>`;
+      html += all.map(s => `
+        <div style="padding:12px;border:1px solid var(--border);border-radius:10px;margin-bottom:8px;background:rgba(255,255,255,0.02)">
+          <div style="display:flex;justify-content:space-between">
+            <span><b>${s.fromGuardName}</b> ↔️ <b>${s.toGuardName}</b></span>
+            <span class="badge ${s.status==='approved'?'bg':'br'}">${s.status==='approved'?'✅ Approuvé':'❌ Refusé'}</span>
+          </div>
+          <div style="font-size:11px;color:var(--text2);margin-top:4px">${s.mySession} ↔️ ${s.herSession}</div>
+        </div>`).join('');
+    }
+    el.innerHTML = html;
+  }
+
+  // Render compensation history
+  renderCompHistory();
+}
+
+function sendCompensation() {
+  const fromGid = parseInt(document.getElementById('compFromGuard').value);
+  const sessionId = parseInt(document.getElementById('compSession').value);
+  const toGid = parseInt(document.getElementById('compToGuard').value);
+  const offer = document.getElementById('compOffer').value;
+  const message = document.getElementById('compMessage').value.trim();
+
+  if(!fromGid || !sessionId || !toGid) { showToast('Veuillez remplir tous les champs','error'); return; }
+
+  const fromGuard = guards.find(g=>g.id===fromGid);
+  const toGuard = guards.find(g=>g.id===toGid);
+  const session = requests.find(r=>r.id===sessionId);
+
+  const offerLabels = {
+    '2_weeks_off': '2 repos consécutifs (2 semaines suivantes)',
+    '1_week_off': '1 repos (semaine suivante)',
+    '3_weeks_off': '3 repos consécutifs (3 semaines suivantes)'
+  };
+
+  const comp = {
+    id: compIdCtr++,
+    fromGuardId: fromGid, fromGuardName: fromGuard.name,
+    toGuardId: toGid, toGuardName: toGuard.name,
+    sessionId, sessionInfo: session ? `${session.date} | ${session.time} | ${session.room}` : '—',
+    module: session ? session.module : '—',
+    offer, offerLabel: offerLabels[offer],
+    message, status: 'pending_compensation',
+    createdAt: new Date().toLocaleDateString('fr-FR')
+  };
+  compensations.push(comp);
+  lsSave('compensations', compensations);
+
+  // Reset
+  document.getElementById('compFromGuard').value = '';
+  document.getElementById('compSession').innerHTML = '<option>— Choisir la surveillante d\'abord —</option>';
+  document.getElementById('compSession').disabled = true;
+  document.getElementById('compToGuard').value = '';
+  document.getElementById('compMessage').value = '';
+
+  renderCompHistory();
+  showToast(`✅ Invitation envoyée à ${toGuard.name}`, 'success');
+}
+
+function renderCompHistory() {
+  const el = document.getElementById('compHistory');
+  if(!el) return;
+  if(!compensations.length) { el.innerHTML = '<div class="empty"><div class="ei">📋</div><p>Aucune compensation envoyée</p></div>'; return; }
+  el.innerHTML = compensations.slice().reverse().map(c => `
+    <div style="padding:13px;border:1px solid ${c.status==='accepted_compensation'?'rgba(39,174,96,0.3)':c.status==='refused_compensation'?'rgba(231,76,60,0.3)':'var(--border)'};border-radius:11px;margin-bottom:9px;background:rgba(255,255,255,0.02)">
+      <div style="display:flex;justify-content:space-between;margin-bottom:6px;flex-wrap:wrap;gap:6px">
+        <b>🎁 ${c.fromGuardName} → ${c.toGuardName}</b>
+        <span class="badge ${c.status==='accepted_compensation'?'bg':c.status==='refused_compensation'?'br':'bo'}">
+          ${c.status==='accepted_compensation'?'✅ Acceptée':c.status==='refused_compensation'?'❌ Refusée':'⏳ En attente'}
+        </span>
+      </div>
+      <div style="font-size:12px;color:var(--text2)">
+        📅 ${c.sessionInfo} — ${c.module}<br>
+        🎁 Compensation : <b>${c.offerLabel}</b><br>
+        ${c.message?`💬 ${c.message}<br>`:''}
+        📆 ${c.createdAt}
+      </div>
+      ${c.status==='pending_compensation'?`
+        <div style="margin-top:8px;display:flex;gap:6px">
+          <button class="btn btn-sm btn-s" onclick="adminRespondComp(${c.id},'accepted_compensation')">✅ Confirmer l'accord</button>
+          <button class="btn btn-sm btn-d" onclick="adminRespondComp(${c.id},'refused_compensation')">❌ Annuler</button>
+        </div>`:''}
+    </div>
+  `).join('');
+}
+
+function adminRespondComp(id, decision) {
+  const c = compensations.find(x=>x.id===id);
+  if(!c) return;
+  c.status = decision;
+  if(decision === 'accepted_compensation') {
+    // Assign the toGuard to the session
+    const r = requests.find(x=>x.id===c.sessionId);
+    if(r) {
+      if(!r.assignedGuards) r.assignedGuards = [];
+      const fromIdx = r.assignedGuards.indexOf(c.fromGuardId);
+      if(fromIdx > -1) r.assignedGuards[fromIdx] = c.toGuardId;
+      else r.assignedGuards.push(c.toGuardId);
+      r._saved = true; dbSaveRequest(r);
+    }
+    showToast('✅ Compensation confirmée — planning mis à jour', 'success');
+  } else {
+    showToast('❌ Compensation annulée', 'warn');
+  }
+  lsSave('compensations', compensations);
+  renderCompHistory();
+  renderAdminDash();
+}
+
+// Guard view - show incoming compensation invitations
+function renderCompensationIncoming(gid) {
+  const el = document.getElementById('compensationIncoming');
+  if(!el) return;
+  const incoming = compensations.filter(c => c.toGuardId === gid && c.status === 'pending_compensation');
+  if(!incoming.length) { el.innerHTML = '<div class="empty"><div class="ei">🎁</div><p>Aucune invitation de compensation</p></div>'; return; }
+  el.innerHTML = incoming.map(c => `
+    <div style="padding:14px;border:2px solid rgba(201,153,58,0.4);border-radius:12px;margin-bottom:10px;background:rgba(201,153,58,0.05)">
+      <div style="font-weight:700;font-size:14px;margin-bottom:8px">🎁 Invitation de M. ZEKRI Ammar</div>
+      <div style="font-size:13px;margin-bottom:10px">
+        Vous êtes invitée à remplacer <b>${c.fromGuardName}</b> pour la séance :<br>
+        <span style="color:var(--gold2)">📅 ${c.sessionInfo} — ${c.module}</span><br><br>
+        En échange : <b style="color:#27ae60">${c.offerLabel}</b>
+        ${c.message?`<br><br>💬 <i>"${c.message}"</i>`:''}
+      </div>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-sm btn-s" onclick="respondCompensation(${c.id},'accepted_compensation')">✅ J'accepte</button>
+        <button class="btn btn-sm btn-d" onclick="respondCompensation(${c.id},'refused_compensation')">❌ Je refuse</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function respondCompensation(id, response) {
+  const c = compensations.find(x=>x.id===id);
+  if(!c) return;
+  c.status = response;
+  lsSave('compensations', compensations);
+  if(response === 'accepted_compensation') {
+    showToast('✅ Vous avez accepté — M. ZEKRI Ammar sera informé', 'success');
+  } else {
+    showToast('Invitation refusée', 'warn');
+  }
+  renderGuardView();
+}
+
+function loadCompensations() {
+  const saved = lsLoad('compensations', []);
+  if(saved.length) { compensations = saved; compIdCtr = Math.max(...saved.map(c=>c.id), 0)+1; }
+}
+
+// ══════════════════════════════════════════════════════
 //  GUARD VIEW
 // ══════════════════════════════════════════════════════
 function getGuardSessions(guardId) {
@@ -2250,6 +2518,7 @@ function renderGuardView() {
     <div class="sc"><div class="si" style="background:rgba(201,153,58,0.15)">📋</div><div class="sv"><h3>${mySessions.length}</h3><p>Mes séances</p></div></div>
     <div class="sc"><div class="si" style="background:rgba(230,126,34,0.15)">🔄</div><div class="sv"><h3>${swapRequests.filter(s=>s.fromGuardId===g.id).length}</h3><p>Échanges demandés</p></div></div>
     <div class="sc"><div class="si" style="background:rgba(39,174,96,0.15)">📬</div><div class="sv"><h3>${pendingSwaps}</h3><p>Demandes reçues</p></div></div>
+    <div class="sc"><div class="si" style="background:rgba(201,153,58,0.15)">🎁</div><div class="sv"><h3>${compensations.filter(c=>c.toGuardId===g.id&&c.status==='pending_compensation').length}</h3><p>Invitations comp.</p></div></div>
   `;
 
   // My sessions
@@ -2287,6 +2556,7 @@ function renderGuardView() {
 
   renderIncomingSwaps(g.id);
   renderSentSwaps(g.id);
+  renderCompensationIncoming(g.id);
 }
 
 document.addEventListener('change', e => {
@@ -2641,6 +2911,7 @@ function loadSessions() {
 // First build dropdown from local data, then load from DB
 buildLoginDropdown();
 loadSessions();
+loadCompensations();
 // Clear old demo localStorage data
 try {
   const oldReqs = localStorage.getItem('infspm_requests');
